@@ -100,12 +100,15 @@ public abstract class TreeNode {
 
 								//SearchEngine.removeFromVec(ans, mfile);
 								ans.del(mfile);
-								break;
 
 							}
 							itr = itr.next;
 						}
 
+					}
+					
+					else{
+						ans.first = null;
 					}
 
 				}
