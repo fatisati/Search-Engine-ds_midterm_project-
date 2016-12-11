@@ -9,7 +9,7 @@ public class BstNode extends TreeNode {
 	public BstNode(String data, BstNode father, boolean isleft, UI ui) {
 		// TODO Auto-generated constructor stub
 		this.data = data;
-		files = new Vector<>();
+		files = new LinkList();
 		this.father = father;
 		this.isleft = isleft;
 		this.ui = ui;
@@ -25,7 +25,7 @@ public class BstNode extends TreeNode {
 				
 				if(file!=null){
 					
-					files.addElement(file);
+					files.add(file);
 					file.nodes.addElement(this);
 					
 				}

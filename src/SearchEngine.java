@@ -163,18 +163,18 @@ public class SearchEngine {
 
 	}
 	
-	public static void removeFromVec(Vector<MyFile>inp, MyFile mfile){
-		
-		Iterator<MyFile> itr = inp.iterator();
-		while (itr.hasNext()) {
-
-			MyFile mf = itr.next();
-			if (mf.equals(mfile)) {
-				itr.remove();
-				break;
-			}
-		}
-		
-	}
+//	public static void removeFromVec(Vector<MyFile>inp, MyFile mfile){
+//		
+//		Iterator<MyFile> itr = inp.iterator();
+//		while (itr.hasNext()) {
+//
+//			MyFile mf = itr.next();
+//			if (mf.equals(mfile)) {
+//				itr.remove();
+//				break;
+//			}
+//		}
+//		
+//	}
 
 }

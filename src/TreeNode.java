@@ -2,7 +2,8 @@ import java.util.Vector;
 
 public abstract class TreeNode {
 
-	Vector<MyFile> files;
+	//Vector<MyFile> files;
+	LinkList files;
 	TreeNode stpWrd;
 	public static IntObj numberOfWords;
 	UI ui;
@@ -18,9 +19,14 @@ public abstract class TreeNode {
 	public void deleteFile(MyFile mfile) {
 		for (TreeNode tn : mfile.nodes) {
 
-			SearchEngine.removeFromVec(tn.files, mfile);
+			//SearchEngine.removeFromVec(tn.files, mfile);
+			
+			tn.files.del(mfile);
+			
+			//System.out.println(tn.files.mfile.file.getName());
 
-			if (tn.files.size()==0) {
+			if (tn.files.mfile == null) {
+				tn.files = null;
 				tn.deleteNode();
 			}
 		}
@@ -41,9 +47,9 @@ public abstract class TreeNode {
 		}
 	}
 
-	public Vector<MyFile> searchTerm(String parts[]){
+	public LinkList searchTerm(String parts[]){
 				
-		Vector<MyFile> ans = new Vector<>();
+		LinkList ans = new LinkList();
 
 		int str = 2;
 
@@ -54,10 +60,15 @@ public abstract class TreeNode {
 		
 		if (parts.length > str && search(parts[str]) != null) {
 
-			Vector<MyFile> tmp = search(parts[str]).files;
+			LinkList tmp = search(parts[str]).files;
 
-			for (MyFile mfile : tmp) {
-				ans.addElement(mfile);
+//			for (MyFile mfile : tmp) {
+//				ans.addElement(mfile);
+//			}
+			
+			while(tmp != null){
+				 ans.add(tmp.mfile);
+				 tmp = tmp.next;
 			}
 
 			for (int i = str + 1; i < parts.length; i++) {
@@ -70,15 +81,28 @@ public abstract class TreeNode {
 
 					if (srNode != null) {
 
-						for (MyFile mfile : ans) {
+//						for (MyFile mfile : ans) {
+//
+//							if (!srNode.files.doesContain(mfile)) {
+//
+//								//SearchEngine.removeFromVec(ans, mfile);
+//								break;
+//
+//							}
+//
+//						}
+						
+						LinkList itr = ans;
+						while(itr != null){
+							
+							MyFile mfile = itr.mfile;
+							if (!srNode.files.doesContain(mfile)) {
 
-							if (!srNode.files.contains(mfile)) {
-
-								SearchEngine.removeFromVec(ans, mfile);
+								//SearchEngine.removeFromVec(ans, mfile);
 								break;
 
 							}
-
+							itr = itr.next;
 						}
 
 					}

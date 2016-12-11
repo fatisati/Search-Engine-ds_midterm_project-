@@ -11,7 +11,7 @@ public class TrieNode extends TreeNode {
 		nodes = new TrieNode[26];
 		ew = false;
 		this.ui = ui;
-		files = new Vector<>();
+		files = new LinkList();
 	}
 
 	public int charToInt(Character c) {
@@ -32,7 +32,7 @@ public class TrieNode extends TreeNode {
 			ew = true;
 			if (file != null) {
 
-				files.addElement(file);
+				files.add(file);
 				file.nodes.addElement(this);
 			}
 

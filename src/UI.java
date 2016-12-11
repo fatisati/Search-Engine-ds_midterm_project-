@@ -381,9 +381,10 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 
 	public void searchCommand(String parts[]) {
 
-		Vector<MyFile> ans = sr.tree.searchTerm(parts);
+		//Vector<MyFile> ans = sr.tree.searchTerm(parts);
+		LinkList ans = sr.tree.searchTerm(parts);;
 
-		if (ans.size() == 0) {
+		if (ans == null) {
 
 			textArea.append("did not match any documents.\n");
 		}
@@ -391,10 +392,18 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 		else {
 
 			textArea.append("Appears in:\n");
-			for (MyFile mfile : ans) {
-
+//			for (MyFile mfile : ans) {
+//
+//				textArea.append( mfile.file.getName()+"\n");
+//
+//			}
+			
+			LinkList itr = ans;
+			while(itr != null){
+				
+				MyFile mfile = itr.mfile;
 				textArea.append( mfile.file.getName()+"\n");
-
+				itr = itr.next;
 			}
 		}
 
