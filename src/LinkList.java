@@ -1,18 +1,94 @@
 
 public class LinkList {
 
-	MyFile mfile;
-	LinkList next;
-	LinkList last;
+	LinkListNode first;
 
 	public LinkList(MyFile mfile) {
 		// TODO Auto-generated constructor stub
-		this.mfile = mfile;
+		first = new LinkListNode(mfile);
 
 	}
 
 	public LinkList() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public void add(MyFile mfile) {
+		if (first != null) {
+			first.add(mfile);
+
+		} else {
+			first = new LinkListNode(mfile);
+		}
+
+	}
+
+	public void del(MyFile mfile) {
+		
+		
+		if (first.mfile == mfile) {
+			//System.out.println(mfile.file.getName());
+			//if(first.next!=null){
+				//System.out.println(first.next.mfile.file.getName());
+			//}
+			first = first.next;
+		}
+
+		else {
+			first.del(mfile);
+		}
+
+	}
+
+	public boolean doesContain(MyFile mfile) {
+		if (first == null) {
+			return false;
+		}
+
+		return first.doesContain(mfile);
+
+	}
+
+	public int size() {
+		if(first == null){
+			return 0;
+		}
+		return first.size();
+	}
+
+	public MyFile elementAt(int i) {
+
+		return first.elementAt(i);
+	}
+
+	public MyFile lastElement() {
+		
+		if(first == null){
+			return null;
+		}
+		return first.lastElement();
+	}
+
+}
+
+class LinkListNode {
+
+	MyFile mfile;
+	LinkListNode next;
+	LinkListNode last;
+
+	public LinkListNode(MyFile mfile) {
+		// TODO Auto-generated constructor stub
+		this.mfile = mfile;
+		next = null;
+		last = null;
+	}
+
+	public LinkListNode() {
+		// TODO Auto-generated constructor stub
+		mfile = null;
+		next = null;
+		last = null;
 	}
 
 	public void add(MyFile mfile) {
@@ -22,7 +98,7 @@ public class LinkList {
 		}
 
 		else if (next == null) {
-			next = new LinkList(mfile);
+			next = new LinkListNode(mfile);
 			next.last = this;
 		}
 
@@ -32,36 +108,26 @@ public class LinkList {
 
 		}
 	}
-	
-	public void del(LinkList node){
-		node.mfile = null;
-	}
 
 	public void del(MyFile mfile) {
-
+		
 		if (this.mfile == mfile) {
-			
-			if(last != null){
+
+			if (next != null) {
 				last.next = next;
 				next.last = last;
 			}
-			
-			else if(next != null){
-				mfile = next.mfile;
-				next = next.next;
-			}
-			
+
 			else {
-				//System.out.println(mfile.file.getName());
-				del(this);
+				last.next = null;
 			}
+
 		}
 
-		else {
+		else if (next != null) {
 
 			next.del(mfile);
 		}
-
 	}
 
 	public boolean doesContain(MyFile mfile) {
@@ -69,8 +135,8 @@ public class LinkList {
 		if (this.mfile == mfile) {
 			return true;
 		}
-		
-		if(next == null){
+
+		if (next == null) {
 			return false;
 		}
 
@@ -103,16 +169,4 @@ public class LinkList {
 		return next.lastElement();
 	}
 
-}
-
-class LinkListNode{
-	
-	MyFile mfile;
-	LinkListNode next;
-	LinkListNode last;
-	
-	public LinkListNode(MyFile mfile) {
-		// TODO Auto-generated constructor stub
-		this.mfile = mfile;
-	}
 }

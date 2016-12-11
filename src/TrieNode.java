@@ -25,8 +25,8 @@ public class TrieNode extends TreeNode {
 
 		if (i == word.length()) {
 			data = word;
-			
-			if(!ew){
+
+			if (!ew) {
 				numberOfWords.value++;
 			}
 			ew = true;
@@ -37,15 +37,15 @@ public class TrieNode extends TreeNode {
 			}
 
 		}
-		
-		else{
-			
+
+		else {
+
 			if (nodes[charToInt(word.charAt(i))] == null) {
 				nodes[charToInt(word.charAt(i))] = new TrieNode(ui);
 			}
 
 			nodes[charToInt(word.charAt(i))].add(word, file, i + 1);
-			
+
 		}
 
 	}
@@ -57,18 +57,18 @@ public class TrieNode extends TreeNode {
 		}
 
 		else {
-			if(nodes[charToInt(word.charAt(i))]!=null){
+			if (nodes[charToInt(word.charAt(i))] != null) {
 				return nodes[charToInt(word.charAt(i))].search(word, i + 1);
 			}
 
-			return null; 
+			return null;
 		}
 	}
 
 	@Override
 	public void add(String word, MyFile file) {
-		
-		if(word.length()!=0){
+
+		if (word.length() != 0) {
 			add(word, file, 0);
 
 		}
@@ -87,12 +87,12 @@ public class TrieNode extends TreeNode {
 			}
 			ui.textArea.append(files.lastElement().file.getName() + "\n");
 		}
-		
+
 		for (int i = 0; i < 26; i++) {
 
 			if (nodes[i] != null) {
 				nodes[i].travel();
-				
+
 			}
 
 		}
@@ -111,6 +111,24 @@ public class TrieNode extends TreeNode {
 	public TreeNode search(String word) {
 		// TODO Auto-generated method stub
 		return search(word, 0);
+	}
+
+	@Override
+	public int hight() {
+		// TODO Auto-generated method stub
+		int max = 1;
+		for (int i = 0; i < 26; i++) {
+			if (nodes[i] != null) {
+
+				int h = nodes[i].hight() + 1;
+				if (h > max) {
+					max = h;
+				}
+			}
+
+		}
+		
+		return max;
 	}
 
 }

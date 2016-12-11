@@ -15,22 +15,22 @@ public abstract class TreeNode {
 	public abstract void deleteNode();
 	
 	public abstract TreeNode search(String word);
-
+	
+	public abstract int hight();
+	
 	public void deleteFile(MyFile mfile) {
+
 		for (TreeNode tn : mfile.nodes) {
 
-			//SearchEngine.removeFromVec(tn.files, mfile);
-			
 			tn.files.del(mfile);
-			
-			//System.out.println(tn.files.mfile.file.getName());
 
-			if (tn.files.mfile == null) {
-				tn.files = null;
+			if (tn.files.first == null) {
+				
 				tn.deleteNode();
 			}
 		}
 	}
+
 
 	public void updateFile(MyFile mfile) {
 		deleteFile(mfile);
@@ -60,7 +60,7 @@ public abstract class TreeNode {
 		
 		if (parts.length > str && search(parts[str]) != null) {
 
-			LinkList tmp = search(parts[str]).files;
+			LinkListNode tmp = search(parts[str]).files.first;
 
 //			for (MyFile mfile : tmp) {
 //				ans.addElement(mfile);
@@ -92,13 +92,14 @@ public abstract class TreeNode {
 //
 //						}
 						
-						LinkList itr = ans;
+						LinkListNode itr = ans.first;
 						while(itr != null){
 							
 							MyFile mfile = itr.mfile;
 							if (!srNode.files.doesContain(mfile)) {
 
 								//SearchEngine.removeFromVec(ans, mfile);
+								ans.del(mfile);
 								break;
 
 							}

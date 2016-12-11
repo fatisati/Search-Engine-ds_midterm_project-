@@ -8,6 +8,8 @@ public class TstNode extends TreeNode {
 	TstNode lc, rc, eq;
 	boolean ew;
 	
+	TstNode father;
+	
 	public TstNode(char data, UI ui) {
 		this.data = data;
 		ew = false;
@@ -88,6 +90,7 @@ public class TstNode extends TreeNode {
 	public void deleteNode(){
 		this.ew = false;
 	}
+	
 //
 //	public void updateFile(MyFile mfile) {
 //
@@ -187,6 +190,38 @@ public class TstNode extends TreeNode {
 			eq.travel(sb);
 		}
 
+	}
+
+	@Override
+	public int hight() {
+		// TODO Auto-generated method stub
+		int max = 1;
+		int h;
+		if (rc != null) {
+
+			h = rc.hight() + 1;
+			if (h > max) {
+				max = h;
+			}
+		}
+
+		if (lc != null) {
+
+			h = lc.hight() + 1;
+			if (h > max) {
+				max = h;
+			}
+		}
+		
+		if (eq != null) {
+
+			h = eq.hight() + 1;
+			if (h > max) {
+				max = h;
+			}
+		}
+		
+		return max;
 	}
 
 }

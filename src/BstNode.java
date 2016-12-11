@@ -18,18 +18,18 @@ public class BstNode extends TreeNode {
 	@Override
 	public void add(String word, MyFile file) {
 		// TODO Auto-generated method stub
-		
-		if(word.length()>0){
-			
+
+		if (word.length() > 0) {
+
 			if (word.compareTo(data) == 0) {
-				
-				if(file!=null){
-					
+
+				if (file != null && !files.doesContain(file)) {
+
 					files.add(file);
+
 					file.nodes.addElement(this);
-					
 				}
-				
+
 			}
 
 			if (word.compareTo(data) > 0) {
@@ -55,9 +55,9 @@ public class BstNode extends TreeNode {
 	public void deleteNode() {
 
 		if (rc == null) {
-			
+
 			if (lc == null) {
-				
+
 				if (isleft) {
 					father.lc = null;
 				} else {
@@ -66,18 +66,18 @@ public class BstNode extends TreeNode {
 			}
 
 			else {
-				
+
 				if (isleft) {
-					
+
 					father.lc = lc;
 					lc.father = father;
-					
+
 				} else {
-					
+
 					father.rc = lc;
 					lc.father = father;
 					lc.isleft = false;
-					
+
 				}
 			}
 			numberOfWords.value--;
@@ -88,13 +88,13 @@ public class BstNode extends TreeNode {
 			if (lc == null) {
 
 				if (isleft) {
-					
+
 					father.lc = rc;
 					rc.father = father;
 					rc.isleft = true;
-					
+
 				} else {
-					
+
 					father.rc = rc;
 					rc.father = father;
 					rc.isleft = false;
@@ -107,6 +107,7 @@ public class BstNode extends TreeNode {
 
 				BstNode m = rc.min();
 				this.data = m.data;
+				this.files = m.files;
 				m.deleteNode();
 
 			}
@@ -143,12 +144,11 @@ public class BstNode extends TreeNode {
 
 	}
 
-
 	@Override
 	public void travel() {
-		
-		if(data!="-"){
-			
+
+		if (data != "-") {
+
 			ui.textArea.append(data + " -> ");
 			for (int i = 0; i < files.size() - 1; i++) {
 				MyFile mfile = files.elementAt(i);
@@ -156,21 +156,43 @@ public class BstNode extends TreeNode {
 
 			}
 			ui.textArea.append(files.lastElement().file.getName() + "\n");
-			
+
 		}
-		
-		if(rc!=null){
+
+		if (rc != null) {
 
 			rc.travel();
 		}
 
-		
-		if(lc!= null){
+		if (lc != null) {
 
 			lc.travel();
 		}
+
+	}
+
+	@Override
+	public int hight() {
+		// TODO Auto-generated method stub
+		int max = 1;
+		int h;
+		if (rc != null) {
+
+			h = rc.hight() + 1;
+			if (h > max) {
+				max = h;
+			}
+		}
+
+		if (lc != null) {
+
+			h = lc.hight() + 1;
+			if (h > max) {
+				max = h;
+			}
+		}
 		
-		
+		return max;
 	}
 
 }

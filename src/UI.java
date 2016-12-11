@@ -129,6 +129,7 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 		reset.setSize(200, 50);
 		reset.setLocation(275, 850);
 		reset.setFont(font);
+		reset.addActionListener((ActionListener) this);
 
 		help = new JButton("Help");
 		help.setSize(200, 50);
@@ -384,7 +385,7 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 		//Vector<MyFile> ans = sr.tree.searchTerm(parts);
 		LinkList ans = sr.tree.searchTerm(parts);;
 
-		if (ans == null) {
+		if (ans.first == null) {
 
 			textArea.append("did not match any documents.\n");
 		}
@@ -398,7 +399,7 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 //
 //			}
 			
-			LinkList itr = ans;
+			LinkListNode itr = ans.first;
 			while(itr != null){
 				
 				MyFile mfile = itr.mfile;
@@ -450,6 +451,13 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 			processCommand(command);
 			search.setText(null);
 
+		}
+		
+		if(arg0.getSource() == reset){
+//			textArea.setText("");
+//			textf.setText("");
+//			search.setText("");
+			System.gc(); 
 		}
 
 	}
