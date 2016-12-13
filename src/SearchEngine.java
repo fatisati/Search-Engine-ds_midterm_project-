@@ -1,12 +1,9 @@
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Vector;
 
-import com.sun.glass.ui.CommonDialogs.Type;
 
 public class SearchEngine {
 

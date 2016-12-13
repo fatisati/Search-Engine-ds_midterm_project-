@@ -504,10 +504,6 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-
-		if (arg0.equals(KeyEvent.VK_UP)) {
-
-		}
 	}
 
 }

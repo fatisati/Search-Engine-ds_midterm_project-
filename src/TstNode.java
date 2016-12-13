@@ -177,7 +177,7 @@ public class TstNode extends TreeNode {
 
 		if (ew == true) {
 			numberOfWords.value++;
-			ui.textArea.append(sb.toString() + " -> ");
+			ui.textArea.append(sb.toString() + " -> "+files.size()+":");
 			for (int i = 0; i < files.size() - 1; i++) {
 				MyFile mfile = files.elementAt(i);
 				ui.textArea.append(mfile.file.getName() + ", ");
