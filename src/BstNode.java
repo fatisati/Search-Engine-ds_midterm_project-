@@ -161,7 +161,8 @@ public class BstNode extends TreeNode {
 				// ui.textArea.append(".."+tf.mfile.elementAt(tf.i)+"..");
 
 			}
-
+			
+			//System.out.println("."+data+".");
 			ui.textArea.append(files.lastElement().mfile.file.getName() + "\n");
 
 		}
@@ -214,11 +215,19 @@ class Bst extends Tree {
 	@Override
 	public void add(String word, MyFile file, int plc) {
 		// TODO Auto-generated method stub
+		
+		if(word.length()==0){
+			return;
+		}
+		
 		if (root == null) {
+			
+			
 			root = new BstNode(word, null, false, ui);
 			root.numberOfWords = new IntObj(1);
 			((BstNode)root).isRoot = true;
 		}
+		
 
 		root.add(word, file, plc);
 	}

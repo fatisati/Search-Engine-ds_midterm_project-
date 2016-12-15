@@ -39,13 +39,14 @@ public class TrieNode extends TreeNode {
 		}
 
 		else {
+			int k = charToInt(word.charAt(i));
 
-			if (nodes[charToInt(word.charAt(i))] == null) {
-				nodes[charToInt(word.charAt(i))] = new TrieNode(ui);
+			if (nodes[k] == null) {
+				nodes[k] = new TrieNode(ui);
 				numberOfNodes.value++;
 			}
 
-			nodes[charToInt(word.charAt(i))].add(word, file, i + 1, j);
+			nodes[k].add(word, file, i + 1, j);
 
 		}
 
@@ -152,7 +153,7 @@ class Trie extends Tree{
 		// TODO Auto-generated method stub
 		if(root == null){
 			root = new TrieNode(ui);
-			root.numberOfNodes = new IntObj(0);
+			root.numberOfNodes = new IntObj(1);
 		}
 		
 		root.add(word, file, plc);

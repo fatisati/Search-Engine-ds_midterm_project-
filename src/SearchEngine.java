@@ -20,13 +20,12 @@ public class SearchEngine {
 		this.type = type;
 		TreeNode.numberOfWords = new IntObj(0);
 		this.ui = ui;
-		String txt = null;
 		indexFiled = files.size();
 
 		String stpWordsTxt = filetxt("./StopWords.txt");
 		stopwords = stpWords(stpWordsTxt);
 		
-		System.out.println(stopwords.doesContain("about"));
+		//System.out.println(stopwords.doesContain("about"));
 //		int str = 0;
 //
 //		txt = filetxt(files.elementAt(0).file.getPath());
@@ -59,7 +58,7 @@ public class SearchEngine {
 		
 		readFiles(files);
 		
-		System.out.println(tree.root.numberOfNodes.value);
+		//System.out.println(TreeNode.numberOfNodes.value);
 		
 		System.gc();
 		long memoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();

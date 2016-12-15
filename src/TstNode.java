@@ -46,6 +46,7 @@ public class TstNode extends TreeNode {
 			if (Character.compare(word.charAt(i), data) == 0) {
 				if (eq == null) {
 					eq = new TstNode(word.charAt(i + 1),  ui);
+					numberOfNodes.value++;
 				}
 				i = i + 1;
 				next = eq;
@@ -54,6 +55,7 @@ public class TstNode extends TreeNode {
 			else if (Character.compare(word.charAt(i), data) > 0) {
 				if (rc == null) {
 					rc = new TstNode(word.charAt(i),  ui);
+					numberOfNodes.value++;
 				}
 				next = rc;
 			}
@@ -61,6 +63,7 @@ public class TstNode extends TreeNode {
 			else if (Character.compare(word.charAt(i), data) < 0) {
 				if (lc == null) {
 					lc = new TstNode(word.charAt(i),  ui);
+					numberOfNodes.value++;
 				}
 				next = lc;
 			}
@@ -212,6 +215,7 @@ class Tst extends Tree{
 		
 		if(root == null){
 			root = new TstNode(word.charAt(0), ui);
+			root.numberOfNodes = new IntObj(1);
 			//System.out.println(word);
 		}
 		
