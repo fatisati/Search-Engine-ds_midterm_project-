@@ -18,13 +18,13 @@ public class TstNode extends TreeNode {
 	}
 
 	@Override
-	public void add(String word, MyFile file) {
+	public void add(String word, MyFile file, int plc) {
 		// TODO Auto-generated method stub
-		add(word, 0, file);
+		add(word, 0, file, plc);
 
 	}
 
-	public void add(String word, int i, MyFile file) {
+	public void add(String word, int i, MyFile file, int plc) {
 
 		TstNode next = null;
 		boolean end = true;
@@ -39,7 +39,7 @@ public class TstNode extends TreeNode {
 			ew = true;
 			if (file != null && !files.doesContain(file)) {
 
-				files.add(file);
+				files.add(new TreeFile(file, plc));
 				file.nodes.addElement(this);
 			}
 
@@ -68,7 +68,7 @@ public class TstNode extends TreeNode {
 				next = lc;
 			}
 
-			next.add(word, i, file);
+			next.add(word, i, file, plc);
 
 		}
 
@@ -179,11 +179,11 @@ public class TstNode extends TreeNode {
 			numberOfWords.value++;
 			ui.textArea.append(sb.toString() + " -> "+files.size()+":");
 			for (int i = 0; i < files.size() - 1; i++) {
-				MyFile mfile = files.elementAt(i);
+				MyFile mfile = files.elementAt(i).mfile;
 				ui.textArea.append(mfile.file.getName() + ", ");
 
 			}
-			ui.textArea.append(files.lastElement().file.getName() + "\n");
+			ui.textArea.append(files.lastElement().mfile.file.getName() + "\n");
 		}
 		if (eq != null) {
 

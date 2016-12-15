@@ -4,7 +4,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Vector;
 
-
 public class SearchEngine {
 
 	// TstNode tst;
@@ -36,7 +35,7 @@ public class SearchEngine {
 
 			str++;
 		}
-		
+
 		long startTime = System.currentTimeMillis();
 		System.gc();
 		long memoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
@@ -62,48 +61,40 @@ public class SearchEngine {
 
 			for (MyFile mfile : files) {
 
-				txt = filetxt(mfile.file.getPath());
-				// String[] parts = txt.split("[\\r\\n|\\s]+");
-				String parts[] = txt.replaceAll("(^\\s+|\\s+$)", "").split("\\s+");
-
-				for (int j = 0; j < parts.length; j++) {
-
-					// System.out.println("."+parts[j]+".");
-					if (!stopwords.doesContain(parts[j])) {
-						tree.add(parts[j], mfile);
-					}
-
-				}
+				add(mfile);
 			}
 		}
 		System.gc();
 		long memoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-		long endTime   = System.currentTimeMillis();
+		long endTime = System.currentTimeMillis();
 		long totalTime = endTime - startTime;
-		
-		ui.textArea.append(type + " tree has been created:)\n");
+
+		ui.textArea.append("\n"+type + " tree has been created:)\n");
 		ui.textArea.append("number of indexed files: " + indexFiled + "\n");
 		ui.textArea.append("number of words in tree: " + TreeNode.numberOfWords.value + "\n");
-		ui.textArea.append("tree height: " + tree.hight()+ "\n");
-		ui.textArea.append("time used: " + totalTime+ " millisecond\n");
-		ui.textArea.append(memoryAfter - memoryBefore+" memory usage\n\n");
+		ui.textArea.append("tree height: " + tree.hight() + "\n");
+		ui.textArea.append("time used: " + totalTime + " millisecond\n");
+		ui.textArea.append(memoryAfter - memoryBefore + " memory usage\n\n");
 	}
 
-	public void add(MyFile file) {
+	public void add(MyFile mfile) {
 
-		String txt = filetxt(file.file.getPath());
-		String[] parts = txt.split("[\\r\\n|\\s]+");
-
-		if (tree == null) {
-			tree = new TstNode(parts[0].charAt(0), ui);
-		}
+		String txt = filetxt(mfile.file.getPath());
+		// String[] parts = txt.split("[\\r\\n|\\s]+");
+		String parts[] = txt.replaceAll("(^\\s+|\\s+$)", "").split("\\s+");
 
 		for (int j = 0; j < parts.length; j++) {
 
-			if (!stopwords.doesContain(parts[j])) {
+			parts[j] = parts[j].replaceAll("[^A-Za-z]", " ");
+			String parts1[] = parts[j].replaceAll("(^\\s+|\\s+$)", "").split("\\s+");
 
-				tree.add(parts[j], file);
+			for (int k = 0; k < parts1.length; k++) {
+
+				if (!stopwords.doesContain(parts1[k])) {
+					tree.add(parts1[k], mfile, j);
+				}
 			}
+
 		}
 
 	}
@@ -114,8 +105,15 @@ public class SearchEngine {
 		if (type.equals("tst")) {
 
 			ans = new TstNode('t', ui);
-		} else {
+		} 
+		
+		else if (type.equals("bst")) {
 			ans = new BstNode("-", null, false, ui);
+		}
+		
+		else{
+			
+			ans = new TrieNode(ui);
 		}
 
 		// txt = filetxt(mfile.file.getPath());
@@ -123,7 +121,7 @@ public class SearchEngine {
 		String parts[] = txt.replaceAll("(^\\s+|\\s+$)", "").split("\\s+");
 
 		for (int j = 0; j < parts.length; j++) {
-			ans.add(parts[j], null);
+			ans.add(parts[j], null, j);
 		}
 
 		return ans;
@@ -149,7 +147,7 @@ public class SearchEngine {
 				line = br.readLine();
 			}
 			everything = sb.toString();
-			everything = everything.replaceAll("[^A-Za-z]", " ");
+			//everything = everything.replaceAll("[^A-Za-z]", " ");
 			everything = everything.toLowerCase();
 			return everything;
 		} catch (IOException e) {

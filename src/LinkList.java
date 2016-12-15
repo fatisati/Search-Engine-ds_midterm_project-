@@ -3,9 +3,9 @@ public class LinkList {
 
 	LinkListNode first;
 
-	public LinkList(MyFile mfile) {
+	public LinkList(TreeFile tfile) {
 		// TODO Auto-generated constructor stub
-		first = new LinkListNode(mfile);
+		first = new LinkListNode(tfile);
 
 	}
 
@@ -13,24 +13,24 @@ public class LinkList {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void add(MyFile mfile) {
+	public boolean add(TreeFile tfile) {
 		if (first != null) {
-			first.add(mfile);
+			return first.add(tfile);
 
 		} else {
-			first = new LinkListNode(mfile);
+			first = new LinkListNode(tfile);
+			return true;
 		}
 
 	}
 
 	public void del(MyFile mfile) {
-		
-		
-		if (first.mfile == mfile) {
-			//System.out.println(mfile.file.getName());
-			//if(first.next!=null){
-				//System.out.println(first.next.mfile.file.getName());
-			//}
+
+		if (first.tfile.mfile == mfile) {
+			// System.out.println(mfile.file.getName());
+			// if(first.next!=null){
+			// System.out.println(first.next.mfile.file.getName());
+			// }
 			first = first.next;
 		}
 
@@ -50,68 +50,77 @@ public class LinkList {
 	}
 
 	public int size() {
-		if(first == null){
+		if (first == null) {
 			return 0;
 		}
 		return first.size();
 	}
 
-	public MyFile elementAt(int i) {
+	public TreeFile elementAt(int i) {
 
 		return first.elementAt(i);
 	}
 
-	public MyFile lastElement() {
-		
-		if(first == null){
+	public TreeFile lastElement() {
+
+		if (first == null) {
 			return null;
 		}
 		return first.lastElement();
+	}
+
+	public LinkListNode haminin(TreeFile tf) {
+
+		if (first == null) {
+			return null;
+		}
+
+		return first.haminin(tf);
 	}
 
 }
 
 class LinkListNode {
 
-	MyFile mfile;
+	TreeFile tfile;
 	LinkListNode next;
 	LinkListNode last;
 
-	public LinkListNode(MyFile mfile) {
+	public LinkListNode(TreeFile tfile) {
 		// TODO Auto-generated constructor stub
-		this.mfile = mfile;
-		next = null;
-		last = null;
+		this.tfile = tfile;
+
 	}
 
 	public LinkListNode() {
 		// TODO Auto-generated constructor stub
-		mfile = null;
-		next = null;
-		last = null;
 	}
 
-	public void add(MyFile mfile) {
+	public boolean add(TreeFile tfile) {
 
-		if (this.mfile == null) {
-			this.mfile = mfile;
+		if (tfile.eq(this.tfile)) {
+			return false;
+		}
+
+		if (this.tfile == null) {
+			this.tfile = tfile;
+			return true;
 		}
 
 		else if (next == null) {
-			next = new LinkListNode(mfile);
+			next = new LinkListNode(tfile);
 			next.last = this;
+			return true;
 		}
 
 		else {
-
-			next.add(mfile);
-
+			return next.add(tfile);
 		}
 	}
 
 	public void del(MyFile mfile) {
-		
-		if (this.mfile == mfile) {
+
+		if (this.tfile.mfile == mfile) {
 
 			if (next != null) {
 				last.next = next;
@@ -132,7 +141,7 @@ class LinkListNode {
 
 	public boolean doesContain(MyFile mfile) {
 
-		if (this.mfile == mfile) {
+		if (this.tfile.mfile == mfile) {
 			return true;
 		}
 
@@ -152,21 +161,38 @@ class LinkListNode {
 		return (next.size() + 1);
 	}
 
-	public MyFile elementAt(int i) {
+	public TreeFile elementAt(int i) {
 
 		if (i == 0) {
-			return mfile;
+			return tfile;
 		}
 
 		return next.elementAt(i - 1);
 	}
 
-	public MyFile lastElement() {
+	public TreeFile lastElement() {
 		if (next == null) {
-			return mfile;
+			return tfile;
 		}
 
 		return next.lastElement();
+	}
+
+	public LinkListNode haminin(TreeFile tf) {
+
+		if (tf.mfile == this.tfile.mfile) {
+			return this;
+		}
+
+		else {
+			if (next == null) {
+				return null;
+			}
+
+			else {
+				return next.haminin(tf);
+			}
+		}
 	}
 
 }

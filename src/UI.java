@@ -206,6 +206,8 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 		
 		//command = command.replaceAll("[^A-Za-z]", " ");
 		//String parts[] = command.replaceAll("(^\\s+|\\s+$)", "").split("\\s+");
+		long startTime = System.currentTimeMillis();
+
 		
 		String parts[] = command.split(" ");
 		StringBuilder bl = new StringBuilder();
@@ -257,6 +259,10 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 
 			}
 		}
+		
+		long endTime = System.currentTimeMillis();
+		long totalTime = endTime - startTime;
+		textArea.append("time used: " + totalTime + " millisecond\n");
 	}
 
 	public void addCommand(String fileName) {
@@ -400,13 +406,21 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 //			}
 			
 			LinkListNode itr = ans.first;
+						
 			while(itr != null){
 				
-				MyFile mfile = itr.mfile;
+				MyFile mfile = itr.tfile.mfile;
+				
 				textArea.append( mfile.file.getName()+"\n");
+
+				itr.tfile.printPlace(this);
+				itr.tfile.plcs = new Vector<>();
+				itr.tfile.plcs.addElement(new IntObj(itr.tfile.i));
+				
 				itr = itr.next;
 			}
 		}
+
 
 	}
 

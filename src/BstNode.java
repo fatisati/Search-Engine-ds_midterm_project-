@@ -16,7 +16,7 @@ public class BstNode extends TreeNode {
 	}
 
 	@Override
-	public void add(String word, MyFile file) {
+	public void add(String word, MyFile file, int i) {
 		// TODO Auto-generated method stub
 
 		if (word.length() > 0) {
@@ -25,7 +25,7 @@ public class BstNode extends TreeNode {
 
 				if (file != null && !files.doesContain(file)) {
 
-					files.add(file);
+					files.add(new TreeFile(file, i));
 
 					file.nodes.addElement(this);
 				}
@@ -38,7 +38,7 @@ public class BstNode extends TreeNode {
 					rc = new BstNode(word, this, false, ui);
 					numberOfWords.value++;
 				}
-				rc.add(word, file);
+				rc.add(word, file, i);
 			}
 
 			if (word.compareTo(data) < 0) {
@@ -47,7 +47,7 @@ public class BstNode extends TreeNode {
 					lc = new BstNode(word, this, true, ui);
 					numberOfWords.value++;
 				}
-				lc.add(word, file);
+				lc.add(word, file, i);
 			}
 		}
 	}
@@ -145,17 +145,23 @@ public class BstNode extends TreeNode {
 	}
 
 	@Override
-	public void travel() {
+	public void travel( ) {
 
 		if (data != "-") {
 
 			ui.textArea.append(data + " -> ");
 			for (int i = 0; i < files.size() - 1; i++) {
-				MyFile mfile = files.elementAt(i);
+				MyFile mfile = files.elementAt(i).mfile;
+				
 				ui.textArea.append(mfile.file.getName() + ", ");
+				
+				TreeFile tf = files.elementAt(i);
+				//ui.textArea.append(".."+tf.mfile.elementAt(tf.i)+"..");
 
 			}
-			ui.textArea.append(files.lastElement().file.getName() + "\n");
+			
+		
+			ui.textArea.append(files.lastElement().mfile.file.getName() + "\n");
 
 		}
 

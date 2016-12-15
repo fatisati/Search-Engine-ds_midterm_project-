@@ -21,7 +21,7 @@ public class TrieNode extends TreeNode {
 		return i;
 	}
 
-	public void add(String word, MyFile file, int i) {
+	public void add(String word, MyFile file, int i, int j) {
 
 		if (i == word.length()) {
 			data = word;
@@ -32,7 +32,7 @@ public class TrieNode extends TreeNode {
 			ew = true;
 			if (file != null) {
 
-				files.add(file);
+				files.add(new TreeFile(file, j));
 				file.nodes.addElement(this);
 			}
 
@@ -44,7 +44,7 @@ public class TrieNode extends TreeNode {
 				nodes[charToInt(word.charAt(i))] = new TrieNode(ui);
 			}
 
-			nodes[charToInt(word.charAt(i))].add(word, file, i + 1);
+			nodes[charToInt(word.charAt(i))].add(word, file, i + 1, j);
 
 		}
 
@@ -57,7 +57,12 @@ public class TrieNode extends TreeNode {
 		}
 
 		else {
+
+			if (word.length() == i) {
+				return null;
+			}
 			if (nodes[charToInt(word.charAt(i))] != null) {
+
 				return nodes[charToInt(word.charAt(i))].search(word, i + 1);
 			}
 
@@ -66,10 +71,10 @@ public class TrieNode extends TreeNode {
 	}
 
 	@Override
-	public void add(String word, MyFile file) {
+	public void add(String word, MyFile file, int i) {
 
 		if (word.length() != 0) {
-			add(word, file, 0);
+			add(word, file, 0, i);
 
 		}
 
@@ -81,11 +86,11 @@ public class TrieNode extends TreeNode {
 		if (ew) {
 			ui.textArea.append(data + " -> ");
 			for (int i = 0; i < files.size() - 1; i++) {
-				MyFile mfile = files.elementAt(i);
+				MyFile mfile = files.elementAt(i).mfile;
 				ui.textArea.append(mfile.file.getName() + ", ");
 
 			}
-			ui.textArea.append(files.lastElement().file.getName() + "\n");
+			ui.textArea.append(files.lastElement().mfile.file.getName() + "\n");
 		}
 
 		for (int i = 0; i < 26; i++) {
@@ -127,7 +132,7 @@ public class TrieNode extends TreeNode {
 			}
 
 		}
-		
+
 		return max;
 	}
 
