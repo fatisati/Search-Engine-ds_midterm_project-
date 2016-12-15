@@ -1,6 +1,3 @@
-import java.io.File;
-import java.util.Iterator;
-import java.util.Vector;
 
 public class TstNode extends TreeNode {
 
@@ -74,40 +71,11 @@ public class TstNode extends TreeNode {
 
 	}
 
-//	public void deleteFile(MyFile mfile) {
-//
-//		for (TreeNode tn : mfile.nodes) {
-//
-//			TstNode d = (TstNode) tn;
-//			SearchEngine.removeFromVec(d.files, mfile);
-//
-//			if (d.files.isEmpty()) {
-//				d.ew = false;
-//			}
-//		}
-//	}
 	
 	public void deleteNode(){
 		this.ew = false;
 	}
 	
-//
-//	public void updateFile(MyFile mfile) {
-//
-//		deleteFile(mfile);
-//		mfile.nodes = new Vector<>();
-//		String txt = SearchEngine.filetxt(mfile.file.getPath());
-//
-//		String parts[] = txt.replaceAll("(^\\s+|\\s+$)", "").split("\\s+");
-//		for (int i = 0; i < parts.length; i++) {
-//
-//			if (!stpWrd.doesContain(parts[i], 0)) {
-//
-//				add(parts[i], 0, mfile);
-//			}
-//		}
-//
-//	}
 	public TstNode search(String word){
 		if(word.length()==0){
 			return null;
@@ -177,13 +145,13 @@ public class TstNode extends TreeNode {
 
 		if (ew == true) {
 			numberOfWords.value++;
-			ui.textArea.append(sb.toString() + " -> "+files.size()+":");
-			for (int i = 0; i < files.size() - 1; i++) {
-				MyFile mfile = files.elementAt(i).mfile;
-				ui.textArea.append(mfile.file.getName() + ", ");
-
-			}
-			ui.textArea.append(files.lastElement().mfile.file.getName() + "\n");
+			ui.textArea.append(sb.toString() + " \n ");
+//			for (int i = 0; i < files.size() - 1; i++) {
+//				MyFile mfile = files.elementAt(i).mfile;
+//				ui.textArea.append(mfile.file.getName() + ", ");
+//
+//			}
+			//ui.textArea.append(files.lastElement().mfile.file.getName() + "\n");
 		}
 		if (eq != null) {
 
@@ -224,4 +192,31 @@ public class TstNode extends TreeNode {
 		return max;
 	}
 
+}
+
+class Tst extends Tree{
+	
+	//TstNode root;
+	UI ui;
+	
+	public Tst(UI ui) {
+		// TODO Auto-generated constructor stub
+		this.ui = ui;
+	}
+	
+	public void add(String word, MyFile file, int plc) {
+//		
+		if(word.length()==0){
+			return;
+		}
+		
+		if(root == null){
+			root = new TstNode(word.charAt(0), ui);
+			//System.out.println(word);
+		}
+		
+		root.add(word, file, plc);
+	}
+	
+	
 }

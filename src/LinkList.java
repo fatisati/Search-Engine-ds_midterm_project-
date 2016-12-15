@@ -98,9 +98,9 @@ class LinkListNode {
 
 	public boolean add(TreeFile tfile) {
 
-		if (tfile.eq(this.tfile)) {
-			return false;
-		}
+//		if (tfile.eq(this.tfile)) {
+//			return false;
+//		}
 
 		if (this.tfile == null) {
 			this.tfile = tfile;

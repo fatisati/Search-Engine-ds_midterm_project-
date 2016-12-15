@@ -5,6 +5,7 @@ public class BstNode extends TreeNode {
 	String data;
 	BstNode lc, rc, father;
 	boolean isleft;
+	boolean isRoot;
 
 	public BstNode(String data, BstNode father, boolean isleft, UI ui) {
 		// TODO Auto-generated constructor stub
@@ -13,6 +14,7 @@ public class BstNode extends TreeNode {
 		this.father = father;
 		this.isleft = isleft;
 		this.ui = ui;
+		isRoot = false;
 	}
 
 	@Override
@@ -54,7 +56,7 @@ public class BstNode extends TreeNode {
 
 	public void deleteNode() {
 
-		if (rc == null) {
+		if (rc == null && !isRoot) {
 
 			if (lc == null) {
 
@@ -85,7 +87,7 @@ public class BstNode extends TreeNode {
 
 		else {
 
-			if (lc == null) {
+			if (lc == null && !isRoot) {
 
 				if (isleft) {
 
@@ -145,22 +147,21 @@ public class BstNode extends TreeNode {
 	}
 
 	@Override
-	public void travel( ) {
+	public void travel() {
 
 		if (data != "-") {
 
 			ui.textArea.append(data + " -> ");
 			for (int i = 0; i < files.size() - 1; i++) {
 				MyFile mfile = files.elementAt(i).mfile;
-				
+
 				ui.textArea.append(mfile.file.getName() + ", ");
-				
+
 				TreeFile tf = files.elementAt(i);
-				//ui.textArea.append(".."+tf.mfile.elementAt(tf.i)+"..");
+				// ui.textArea.append(".."+tf.mfile.elementAt(tf.i)+"..");
 
 			}
-			
-		
+
 			ui.textArea.append(files.lastElement().mfile.file.getName() + "\n");
 
 		}
@@ -197,8 +198,29 @@ public class BstNode extends TreeNode {
 				max = h;
 			}
 		}
-		
+
 		return max;
+	}
+
+}
+
+class Bst extends Tree {
+	
+	public Bst(UI ui) {
+		// TODO Auto-generated constructor stub
+		this.ui = ui;
+	}
+
+	@Override
+	public void add(String word, MyFile file, int plc) {
+		// TODO Auto-generated method stub
+		if (root == null) {
+			root = new BstNode(word, null, false, ui);
+			root.numberOfWords = new IntObj(1);
+			((BstNode)root).isRoot = true;
+		}
+
+		root.add(word, file, plc);
 	}
 
 }

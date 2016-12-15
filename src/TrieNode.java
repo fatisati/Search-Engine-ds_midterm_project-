@@ -42,6 +42,7 @@ public class TrieNode extends TreeNode {
 
 			if (nodes[charToInt(word.charAt(i))] == null) {
 				nodes[charToInt(word.charAt(i))] = new TrieNode(ui);
+				numberOfNodes.value++;
 			}
 
 			nodes[charToInt(word.charAt(i))].add(word, file, i + 1, j);
@@ -49,7 +50,7 @@ public class TrieNode extends TreeNode {
 		}
 
 	}
-
+	
 	public TrieNode search(String word, int i) {
 
 		if (ew && word.equals(data)) {
@@ -136,4 +137,25 @@ public class TrieNode extends TreeNode {
 		return max;
 	}
 
+}
+
+class Trie extends Tree{
+	
+	public Trie(UI ui) {
+		// TODO Auto-generated constructor stub
+		this.ui = ui;
+		
+	}
+
+	@Override
+	public void add(String word, MyFile file, int plc) {
+		// TODO Auto-generated method stub
+		if(root == null){
+			root = new TrieNode(ui);
+			root.numberOfNodes = new IntObj(0);
+		}
+		
+		root.add(word, file, plc);
+	}
+	
 }
