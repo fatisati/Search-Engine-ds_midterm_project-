@@ -8,11 +8,13 @@ public class TstNode extends TreeNode {
 
 	TstNode father;
 
-	public TstNode(char data, UI ui) {
+	public TstNode(char data, UI ui, TstNode father) {
 		this.data = data;
 		ew = false;
 		files = new LinkList();
 		this.ui = ui;
+		isRoot = false;
+		this.father = father;
 	}
 
 	@Override
@@ -52,7 +54,7 @@ public class TstNode extends TreeNode {
 		else {
 			if (Character.compare(word.charAt(i), data) == 0) {
 				if (eq == null) {
-					eq = new TstNode(word.charAt(i + 1), ui);
+					eq = new TstNode(word.charAt(i + 1), ui, this);
 					numberOfNodes.value++;
 				}
 				i = i + 1;
@@ -61,7 +63,7 @@ public class TstNode extends TreeNode {
 
 			else if (Character.compare(word.charAt(i), data) > 0) {
 				if (rc == null) {
-					rc = new TstNode(word.charAt(i), ui);
+					rc = new TstNode(word.charAt(i), ui, this);
 					numberOfNodes.value++;
 				}
 				next = rc;
@@ -69,7 +71,7 @@ public class TstNode extends TreeNode {
 
 			else if (Character.compare(word.charAt(i), data) < 0) {
 				if (lc == null) {
-					lc = new TstNode(word.charAt(i), ui);
+					lc = new TstNode(word.charAt(i), ui, this);
 					numberOfNodes.value++;
 				}
 				next = lc;
@@ -81,8 +83,91 @@ public class TstNode extends TreeNode {
 
 	}
 
+	public void addLeft(TstNode node) {
+
+		if (lc == null) {
+
+			lc = node;
+		}
+
+		else {
+			lc.addLeft(node);
+		}
+	}
+
+	public void addRight(TstNode node) {
+
+		if (rc == null) {
+
+			rc = node;
+		}
+
+		else {
+			rc.addRight(node);
+		}
+	}
+
 	public void deleteNode() {
+
 		this.ew = false;
+		
+		if (eq == null) {
+
+			if (this == father.eq) {
+
+				if (rc != null) {
+					
+					rc.addLeft(lc);
+					father.eq = rc;
+				}
+
+				else if (lc != null) {
+
+					father.eq = lc;
+				}
+
+				else {
+
+					father.eq = null;
+
+					if (!father.ew) {
+						father.deleteNode();
+
+					}
+
+				}
+			}
+
+			else if (this == father.rc) {
+
+				if (rc != null) {
+					
+					rc.addLeft(lc);
+
+					father.rc = rc;
+				}
+
+				else {
+
+					father.rc = lc;
+				}
+
+			}
+
+			else if (this == father.lc) {
+
+				if (lc != null) {
+					
+					lc.addRight(rc);
+					father.lc = lc;
+				}
+
+				else {
+
+					father.lc = rc;
+				}
+			}
+		}
 	}
 
 	public TstNode search(String word) {
@@ -223,7 +308,11 @@ class Tst extends Tree {
 		}
 
 		if (root == null) {
-			root = new TstNode(word.charAt(0), ui);
+			//root = new TstNode(word.charAt(0), ui, null);
+			
+			root = new TstNode('-', ui, null);
+
+			//root.isRoot = true;
 			TreeNode.numberOfNodes = new IntObj(1);
 			// System.out.println(word);
 		}

@@ -7,12 +7,17 @@ public class TrieNode extends TreeNode {
 	TrieNode nodes[];
 	boolean ew;
 
-	public TrieNode(UI ui) {
+	TrieNode father;
+	int id;
+
+	public TrieNode(UI ui, TrieNode father, int id) {
 		// TODO Auto-generated constructor stub
 		nodes = new TrieNode[26];
 		ew = false;
 		this.ui = ui;
 		files = new LinkList();
+		this.father = father;
+		this.id = id;
 	}
 
 	public int charToInt(Character c) {
@@ -25,19 +30,19 @@ public class TrieNode extends TreeNode {
 	public void add(String word, MyFile mfile, int i, int plc) {
 
 		if (i == word.length()) {
-			
+
 			if (!ew) {
 				numberOfWords.value++;
 				data = word;
 				ew = true;
 			}
-			
+
 			if (mfile != null && !files.doesContain(mfile.file)) {
 
 				files.add(new TreeFile(mfile.file, plc));
-				
+
 				mfile.nodes.addElement(this);
-				//file.nodes.addElement(this);
+				// file.nodes.addElement(this);
 			}
 
 		}
@@ -46,7 +51,7 @@ public class TrieNode extends TreeNode {
 			int k = charToInt(word.charAt(i));
 
 			if (nodes[k] == null) {
-				nodes[k] = new TrieNode(ui);
+				nodes[k] = new TrieNode(ui, this, k);
 				numberOfNodes.value++;
 			}
 
@@ -55,7 +60,7 @@ public class TrieNode extends TreeNode {
 		}
 
 	}
-	
+
 	public TrieNode search(String word, int i) {
 
 		if (ew && word.equals(data)) {
@@ -116,6 +121,13 @@ public class TrieNode extends TreeNode {
 		ew = false;
 		numberOfWords.value--;
 
+		for (int i = 0; i < 26; i++) {
+			if (nodes[i] != null) {
+				return;
+			}
+		}
+
+		father.nodes[id] = null;
 	}
 
 	@Override
@@ -144,23 +156,23 @@ public class TrieNode extends TreeNode {
 
 }
 
-class Trie extends Tree{
-	
+class Trie extends Tree {
+
 	public Trie(UI ui) {
 		// TODO Auto-generated constructor stub
 		this.ui = ui;
-		
+
 	}
 
 	@Override
 	public void add(String word, MyFile mfile, int plc) {
 		// TODO Auto-generated method stub
-		if(root == null){
-			root = new TrieNode(ui);
+		if (root == null) {
+			root = new TrieNode(ui, null, -1);
 			TreeNode.numberOfNodes = new IntObj(1);
 		}
-		
+
 		root.add(word, mfile, plc);
 	}
-	
+
 }

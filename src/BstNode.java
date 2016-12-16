@@ -6,7 +6,6 @@ public class BstNode extends TreeNode {
 	String data;
 	BstNode lc, rc, father;
 	boolean isleft;
-	boolean isRoot;
 
 	public BstNode(String data, BstNode father, boolean isleft, UI ui) {
 		// TODO Auto-generated constructor stub

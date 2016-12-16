@@ -6,6 +6,8 @@ public abstract class TreeNode {
 	LinkList files;
 	TreeNode stpWrd;// use in update and search methods
 
+	boolean isRoot;
+
 	public static IntObj numberOfNodes;
 
 	public static IntObj numberOfWords;// each node knows how many words are in
