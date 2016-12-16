@@ -1,16 +1,18 @@
+import java.io.File;
 import java.util.Vector;
 
 public abstract class TreeNode {
 
 	LinkList files;
 	TreeNode stpWrd;// use in update and search methods
-	
+
 	public static IntObj numberOfNodes;
 
-	public static IntObj numberOfWords;// each node knows how many words are in it's tree
+	public static IntObj numberOfWords;// each node knows how many words are in
+										// it's tree
 	UI ui;
 
-	public abstract void add(String word, MyFile file, int i);
+	public abstract void add(String word, MyFile mfile, int plc);
 
 	public abstract void travel();
 
@@ -19,20 +21,20 @@ public abstract class TreeNode {
 	public abstract TreeNode search(String word);
 
 	public abstract int hight();
-	
+
 	/**
 	 * 
 	 * @param mfile
 	 * @return the tfile in files which it's mfile equels to mfile
 	 */
-	public TreeFile retTfile(MyFile mfile) {
+	public TreeFile retTfileWithThisFile(File file) {
 
 		LinkListNode itr;
 		itr = files.first;
 
 		while (itr != null) {
 
-			if (itr.tfile.mfile == mfile) {
+			if (itr.tfile.file == file) {
 
 				return itr.tfile;
 			}
@@ -42,27 +44,24 @@ public abstract class TreeNode {
 		return null;
 	}
 
-	
 	/**
 	 * 
 	 * @param parts
-	 * @return returns a linklist of files which contains all parts each file know exactly where each word appear in it
+	 * @return returns a linklist of files which contains all parts each file
+	 *         know exactly where each word appear in it
 	 */
-	
-
-	
 
 }
 
 class TreeFile {
 
-	MyFile mfile;
+	File file;
 	int i;
-	Vector<IntObj> plcs;//places
+	Vector<IntObj> plcs;// places
 
-	public TreeFile(MyFile mfile, int i) {
+	public TreeFile(File file, int i) {
 		// TODO Auto-generated constructor stub
-		this.mfile = mfile;
+		this.file = file;
 		this.i = i;
 
 		plcs = new Vector<>();
@@ -70,6 +69,9 @@ class TreeFile {
 	}
 
 	public void printPlace(UI ui) {
+
+		String txt = SearchEngine.filetxt(file.getPath());
+		String parts[] = txt.replaceAll("(^\\s+|\\s+$)", "").split("\\s+");
 
 		for (IntObj io : plcs) {
 
@@ -81,65 +83,67 @@ class TreeFile {
 				str = 0;
 			}
 
-			if (end > mfile.size()) {
-				end = mfile.size();
+			int maxi = parts.length;
+			
+			if (end > maxi) {
+				end = maxi;
 			}
 
 			ui.textArea.append("(..");
 
 			for (int i = str; i < end; i++) {
-				ui.textArea.append(mfile.elementAt(i) + " ");
+				ui.textArea.append(parts[i] + " ");
 			}
 
 			ui.textArea.append("..)");
 		}
-		
+
 		ui.textArea.append("\n");
 
-
 	}
 
-	public boolean eq(TreeFile tf) {
-
-		if (tf.mfile.file.getName().equals(mfile.file.getName()) && tf.i == i) {
-			return true;
-		}
-		return false;
-	}
+//	public boolean eq(TreeFile tf) {
+//
+//		if (tf.mfile.file.getName().equals(mfile.file.getName()) && tf.i == i) {
+//			return true;
+//		}
+//		return false;
+//	}
 }
 
-abstract class Tree{
-	
+abstract class Tree {
+
 	TreeNode root;
 	UI ui;
-	
-	public abstract void add(String word, MyFile file, int plc);
-	public TreeNode search(String word){
 
-		if(root == null){
+	public abstract void add(String word, MyFile mfile, int plc);
+
+	public TreeNode search(String word) {
+
+		if (root == null) {
 			return null;
 		}
-		
+
 		return root.search(word);
 	}
-	
-	public void travel(){
+
+	public void travel() {
 		root.travel();
 	}
-	
+
 	public int hight() {
 		return root.hight();
 	}
-	
-	public TreeFile retTfile(MyFile mfile){
-		return root.retTfile(mfile);
+
+	public TreeFile retTfile(File file) {
+		return root.retTfileWithThisFile(file);
 	}
-	
+
 	public void deleteFile(MyFile mfile) {
 
 		for (TreeNode tn : mfile.nodes) {
 
-			tn.files.del(mfile);
+			tn.files.del(mfile.file);
 
 			if (tn.files.first == null) {
 
@@ -182,25 +186,27 @@ abstract class Tree{
 
 						while (itr != null) {
 
-							MyFile mfile = itr.tfile.mfile;
+							File file = itr.tfile.file;
 
-							TreeFile tf = srNode.retTfile(mfile);
-							if (!srNode.files.doesContain(mfile)) {
+							TreeFile tf = srNode.retTfileWithThisFile(file);
+							
+							if (tf == null) {
 
-								ans.del(mfile);
+								ans.del(file);
 
 							}
 
 							else {
-								// ans.add(tf);
 
-								LinkListNode ln = ans.haminin(tf);
-								if (ln != null) {
-									
-									//System.out.println("hey");
-									ln.tfile.plcs.addElement(new IntObj(tf.i));
-
-								}
+								LinkListNode node = ans.nodeWithFile(file);
+//								if (ln != null) {
+//
+//									// System.out.println("hey");
+//									ln.tfile.plcs.addElement(new IntObj(tf.i));
+//
+//								}
+								
+								node.tfile.plcs.addElement(new IntObj(tf.i));
 
 							}
 
@@ -224,7 +230,6 @@ abstract class Tree{
 
 	}
 
-	
 	public void updateFile(MyFile mfile) {
 
 		deleteFile(mfile);
@@ -250,12 +255,11 @@ abstract class Tree{
 	}
 
 	public boolean doesContain(String word) {
-		
+
 		if (search(word) != null) {
 			return true;
 		}
 		return false;
 	}
-	
-}
 
+}

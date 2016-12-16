@@ -1,3 +1,4 @@
+import java.io.File;
 
 public class LinkList {
 
@@ -15,6 +16,7 @@ public class LinkList {
 
 	public boolean add(TreeFile tfile) {
 		if (first != null) {
+			
 			return first.add(tfile);
 
 		} else {
@@ -24,9 +26,9 @@ public class LinkList {
 
 	}
 
-	public void del(MyFile mfile) {
+	public void del(File file) {
 
-		if (first.tfile.mfile == mfile) {
+		if (first.tfile.file == file) {
 			// System.out.println(mfile.file.getName());
 			// if(first.next!=null){
 			// System.out.println(first.next.mfile.file.getName());
@@ -35,17 +37,17 @@ public class LinkList {
 		}
 
 		else {
-			first.del(mfile);
+			first.del(file);
 		}
 
 	}
 
-	public boolean doesContain(MyFile mfile) {
+	public boolean doesContain(File file) {
 		if (first == null) {
 			return false;
 		}
 
-		return first.doesContain(mfile);
+		return first.doesContain(file);
 
 	}
 
@@ -69,13 +71,13 @@ public class LinkList {
 		return first.lastElement();
 	}
 
-	public LinkListNode haminin(TreeFile tf) {
+	public LinkListNode nodeWithFile(File file) {
 
 		if (first == null) {
 			return null;
 		}
 
-		return first.haminin(tf);
+		return first.nodeWithFile(file);
 	}
 
 }
@@ -97,8 +99,8 @@ class LinkListNode {
 	}
 
 	public boolean add(TreeFile tfile) {
-
-//		if (tfile.eq(this.tfile)) {
+		
+//		if(this.tfile.mfile == tfile.mfile){
 //			return false;
 //		}
 
@@ -118,9 +120,9 @@ class LinkListNode {
 		}
 	}
 
-	public void del(MyFile mfile) {
+	public void del(File file) {
 
-		if (this.tfile.mfile == mfile) {
+		if (this.tfile.file == file) {
 
 			if (next != null) {
 				last.next = next;
@@ -135,13 +137,13 @@ class LinkListNode {
 
 		else if (next != null) {
 
-			next.del(mfile);
+			next.del(file);
 		}
 	}
 
-	public boolean doesContain(MyFile mfile) {
+	public boolean doesContain(File file) {
 
-		if (this.tfile.mfile == mfile) {
+		if (this.tfile.file == file) {
 			return true;
 		}
 
@@ -149,7 +151,7 @@ class LinkListNode {
 			return false;
 		}
 
-		return next.doesContain(mfile);
+		return next.doesContain(file);
 
 	}
 
@@ -178,9 +180,9 @@ class LinkListNode {
 		return next.lastElement();
 	}
 
-	public LinkListNode haminin(TreeFile tf) {
+	public LinkListNode nodeWithFile(File file) {
 
-		if (tf.mfile == this.tfile.mfile) {
+		if (file == this.tfile.file) {
 			return this;
 		}
 
@@ -190,7 +192,7 @@ class LinkListNode {
 			}
 
 			else {
-				return next.haminin(tf);
+				return next.nodeWithFile(file);
 			}
 		}
 	}

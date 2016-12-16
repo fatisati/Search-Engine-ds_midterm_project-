@@ -41,7 +41,9 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 	int scrx, scry;
 	Font font;
 
-	Vector<MyFile> files;
+	Vector<MyFile> mfiles;
+	//Vector<File> files;
+
 	SearchEngine sr;
 	String command;
 	JFileChooser chooser;
@@ -50,7 +52,9 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 	int cnt;// counter for command- show where we are in commands vector
 
 	public UI() {
-		files = new Vector<>();
+		//files = new Vector<>();
+		mfiles = new Vector<>();
+
 		commands = new Vector<>();
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		JDialog.setDefaultLookAndFeelDecorated(true);
@@ -174,8 +178,8 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 			} // do nothing
 		}
 	}
-	
-	public void brows(){
+
+	public void brows() {
 		chooser = new JFileChooser();
 		chooser.setPreferredSize(new Dimension(800, 600));
 		chooser.setDialogTitle("choosertitle");
@@ -186,32 +190,35 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 
 			textf.setText(chooser.getCurrentDirectory().toString());
-			
 
 		}
 	}
 
 	public void readFiles() {
-		
+
 		File folder = new File(textf.getText());
 		fi = folder.listFiles();
-		files = new Vector<>();
+		//files = new Vector<>();
+		mfiles = new Vector<>();
 		for (int i = 0; i < fi.length; i++) {
-			files.addElement(new MyFile(fi[i]));
+
+			//files.addElement(fi[i]);
+			mfiles.addElement(new MyFile(fi[i]));
+
 		}
 
 	}
 
 	public void processCommand(String command) {
-		
-		//command = command.replaceAll("[^A-Za-z]", " ");
-		//String parts[] = command.replaceAll("(^\\s+|\\s+$)", "").split("\\s+");
+
+		// command = command.replaceAll("[^A-Za-z]", " ");
+		// String parts[] = command.replaceAll("(^\\s+|\\s+$)",
+		// "").split("\\s+");
 		long startTime = System.currentTimeMillis();
 
-		
 		String parts[] = command.split(" ");
 		StringBuilder bl = new StringBuilder();
-		
+
 		for (int j = 1; j < parts.length; j++) {
 			bl.append(parts[j]);
 			if (j + 1 != parts.length) {
@@ -219,10 +226,10 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 			}
 		}
 		String fileName = bl.toString();
-		
+
 		command = command.replaceAll("[^A-Za-z]", " ");
-		parts= command.replaceAll("(^\\s+|\\s+$)", "").split("\\s+");
-		
+		parts = command.replaceAll("(^\\s+|\\s+$)", "").split("\\s+");
+
 		if (parts[0].equals("add")) {
 
 			addCommand(fileName);
@@ -255,11 +262,17 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 
 			if (parts[1].equals("s")) {
 
-				searchCommand(parts);
+				searchCommand(parts, true);
+
+			}
+
+			if (parts[1].equals("w")) {
+
+				searchCommand(parts, false);
 
 			}
 		}
-		
+
 		long endTime = System.currentTimeMillis();
 		long totalTime = endTime - startTime;
 		textArea.append("time used: " + totalTime + " millisecond\n");
@@ -269,8 +282,10 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 
 		boolean flag = false;
 
-		for (MyFile file : files) {
-			if (file.file.getName().equals(fileName)) {
+		for (MyFile mfile : mfiles) {
+			
+			File file = mfile.file;
+			if (file.getName().equals(fileName)) {
 
 				textArea.append("err: already exists, you may want to update.\n");
 				flag = true;
@@ -282,10 +297,16 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 			fi = chooser.getCurrentDirectory().listFiles();
 			for (File file : fi) {
 				if (file.getName().equals(fileName)) {
+					
 					MyFile mfile = new MyFile(file);
+
+					//files.addElement(file);
+					mfiles.addElement(mfile);
+					
+					
 					sr.add(mfile);
-					textArea.append( mfile.file.getName() + " successfully added.\n");
-					files.addElement(mfile);
+					textArea.append(file.getName() + " successfully added.\n");
+
 					flag = true;
 					break;
 				}
@@ -303,7 +324,7 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 
 		boolean flag = false;
 
-		Iterator<MyFile> itr = files.iterator();
+		Iterator<MyFile> itr = mfiles.iterator();
 		while (itr.hasNext()) {
 
 			MyFile mf = itr.next();
@@ -311,7 +332,7 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 
 				sr.tree.deleteFile(mf);
 				itr.remove();
-				textArea.append( mf.file.getName() + " successfully removed from lists.\n");
+				textArea.append(mf.file.getName() + " successfully removed from lists.\n");
 				flag = true;
 				break;
 			}
@@ -327,12 +348,12 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 
 		boolean flag = false;
 
-		for (MyFile mfile : files) {
+		for (MyFile mfile : mfiles) {
 
 			if (mfile.file.getName().equals(fileName)) {
 				sr.tree.updateFile(mfile);
 				flag = true;
-				textArea.append( fileName + " successfully updated.\n");
+				textArea.append(fileName + " successfully updated.\n");
 				break;
 			}
 
@@ -345,27 +366,29 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 	}
 
 	public void listwCommand() {
-//		StringBuilder sb = new StringBuilder();
-//		IntObj num = new IntObj(0);
+		// StringBuilder sb = new StringBuilder();
+		// IntObj num = new IntObj(0);
 		sr.tree.travel();
-		textArea.append("number of words: " + TreeNode.numberOfWords.value+"\n");
+		textArea.append("number of words: " + TreeNode.numberOfWords.value + "\n");
 	}
 
 	public void listlCommand() {
 
-		//textArea.append("\n");
-		for (MyFile mfile : files) {
+		// textArea.append("\n");
+		for (MyFile mfile : mfiles) {
+			
+			File file = mfile.file;
 
-			if (mfile.equals(files.lastElement())) {
-				textArea.append(mfile.file.getName());
+			if (file.equals(mfiles.lastElement().file)) {
+				textArea.append(file.getName());
 
 			} else {
-				textArea.append(mfile.file.getName() + ", ");
+				textArea.append(file.getName() + ", ");
 
 			}
 		}
 
-		textArea.append("\nNumber of listed docs = " + files.size()+"\n");
+		textArea.append("\nNumber of listed docs = " + mfiles.size() + "\n");
 	}
 
 	public void listfCommand() {
@@ -382,14 +405,15 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 			}
 		}
 
-		textArea.append("Number of all docs = " + fi.length+"\n");
+		textArea.append("Number of all docs = " + fi.length + "\n");
 
 	}
 
-	public void searchCommand(String parts[]) {
+	public void searchCommand(String parts[], boolean flag) {
 
-		//Vector<MyFile> ans = sr.tree.searchTerm(parts);
-		LinkList ans = sr.tree.searchTerm(parts);;
+		// Vector<MyFile> ans = sr.tree.searchTerm(parts);
+		LinkList ans = sr.tree.searchTerm(parts);
+		;
 
 		if (ans.first == null) {
 
@@ -399,28 +423,34 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 		else {
 
 			textArea.append("Appears in:\n");
-//			for (MyFile mfile : ans) {
-//
-//				textArea.append( mfile.file.getName()+"\n");
-//
-//			}
-			
-			LinkListNode itr = ans.first;
-						
-			while(itr != null){
-				
-				MyFile mfile = itr.tfile.mfile;
-				
-				textArea.append( mfile.file.getName()+"\n");
+			// for (MyFile mfile : ans) {
+			//
+			// textArea.append( mfile.file.getName()+"\n");
+			//
+			// }
 
-				itr.tfile.printPlace(this);
-				itr.tfile.plcs = new Vector<>();
-				itr.tfile.plcs.addElement(new IntObj(itr.tfile.i));
-				
+			LinkListNode itr = ans.first;
+
+			while (itr != null) {
+
+				File file = itr.tfile.file;
+
+				textArea.append(file.getName() + "\n");
+
+				if (flag) {
+
+					itr.tfile.printPlace(this);
+					itr.tfile.plcs = new Vector<>();
+					
+					itr.tfile.plcs.addElement(new IntObj(itr.tfile.i));
+
+				}
+
 				itr = itr.next;
 			}
 		}
-
+		
+		textArea.append(ans.size() + "\n");
 
 	}
 
@@ -432,22 +462,22 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 		}
 
 		if (arg0.getSource() == build) {
-			
+
 			readFiles();
-			
-			if(tst.isSelected()){
-				
-				sr = new SearchEngine(files, this, "tst");
+
+			if (tst.isSelected()) {
+
+				sr = new SearchEngine(mfiles, this, "tst");
 			}
-			
-			if(bst.isSelected()){
-				
-				sr = new SearchEngine(files, this, "bst");
+
+			if (bst.isSelected()) {
+
+				sr = new SearchEngine(mfiles, this, "bst");
 			}
-			
-			if(trie.isSelected()){
-				
-				sr = new SearchEngine(files, this, "trie");
+
+			if (trie.isSelected()) {
+
+				sr = new SearchEngine(mfiles, this, "trie");
 
 			}
 
@@ -457,21 +487,21 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 
 			command = search.getText();
 			commands.addElement(command);
-			
+
 			command = command.toLowerCase();
-			
-			cnt = commands.size() - 1 ;
-			textArea.append(">>" + command+"\n");
+
+			cnt = commands.size() - 1;
+			textArea.append(">>" + command + "\n");
 			processCommand(command);
 			search.setText(null);
 
 		}
-		
-		if(arg0.getSource() == reset){
-//			textArea.setText("");
-//			textf.setText("");
-//			search.setText("");
-			System.gc(); 
+
+		if (arg0.getSource() == reset) {
+			// textArea.setText("");
+			// textf.setText("");
+			// search.setText("");
+			System.gc();
 		}
 
 	}
@@ -480,13 +510,13 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		if (arg0.getSource() == search) {
-			
+
 			if (arg0.getKeyCode() == KeyEvent.VK_UP) {
-				
+
 				cnt++;
-				cnt = cnt%commands.size();
-				
-				if(commands.size()>0){
+				cnt = cnt % commands.size();
+
+				if (commands.size() > 0) {
 					search.setText(commands.elementAt(cnt));
 				}
 
@@ -495,16 +525,16 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 			else if (arg0.getKeyCode() == KeyEvent.VK_DOWN) {
 
 				cnt--;
-				if(cnt<0){
+				if (cnt < 0) {
 					cnt += commands.size();
 				}
-				
-				if(commands.size()>0){
+
+				if (commands.size() > 0) {
 					search.setText(commands.elementAt(cnt));
 				}
-	
+
 			}
-			
+
 		}
 
 	}

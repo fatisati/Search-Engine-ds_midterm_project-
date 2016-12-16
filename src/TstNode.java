@@ -1,12 +1,13 @@
+import java.io.File;
 
 public class TstNode extends TreeNode {
 
 	char data;
 	TstNode lc, rc, eq;
 	boolean ew;
-	
+
 	TstNode father;
-	
+
 	public TstNode(char data, UI ui) {
 		this.data = data;
 		ew = false;
@@ -21,31 +22,37 @@ public class TstNode extends TreeNode {
 
 	}
 
-	public void add(String word, int i, MyFile file, int plc) {
+	public void add(String word, int i, MyFile mfile, int plc) {
 
 		TstNode next = null;
 		boolean end = true;
-		if (word.length() != 0) {
-			end = Character.compare(word.charAt(i), data) == 0 && i == word.length() - 1;
+
+		if (word.length() == 0) {
+			return;
 		}
 
-		if (end && word.length() != 0) {
+		end = Character.compare(word.charAt(i), data) == 0 && i == word.length() - 1;
+
+		if (end) {
 			if (ew == false) {
-				numberOfWords.value ++;
-			}
-			ew = true;
-			if (file != null && !files.doesContain(file)) {
 
-				files.add(new TreeFile(file, plc));
-				file.nodes.addElement(this);
+				numberOfWords.value++;
+				ew = true;
+
+			}
+			if (mfile != null && !files.doesContain(mfile.file)) {
+
+				files.add(new TreeFile(mfile.file, plc));
+				mfile.nodes.addElement(this);
+				return;
 			}
 
 		}
 
-		if (!end) {
+		else {
 			if (Character.compare(word.charAt(i), data) == 0) {
 				if (eq == null) {
-					eq = new TstNode(word.charAt(i + 1),  ui);
+					eq = new TstNode(word.charAt(i + 1), ui);
 					numberOfNodes.value++;
 				}
 				i = i + 1;
@@ -54,7 +61,7 @@ public class TstNode extends TreeNode {
 
 			else if (Character.compare(word.charAt(i), data) > 0) {
 				if (rc == null) {
-					rc = new TstNode(word.charAt(i),  ui);
+					rc = new TstNode(word.charAt(i), ui);
 					numberOfNodes.value++;
 				}
 				next = rc;
@@ -62,25 +69,24 @@ public class TstNode extends TreeNode {
 
 			else if (Character.compare(word.charAt(i), data) < 0) {
 				if (lc == null) {
-					lc = new TstNode(word.charAt(i),  ui);
+					lc = new TstNode(word.charAt(i), ui);
 					numberOfNodes.value++;
 				}
 				next = lc;
 			}
 
-			next.add(word, i, file, plc);
+			next.add(word, i, mfile, plc);
 
 		}
 
 	}
 
-	
-	public void deleteNode(){
+	public void deleteNode() {
 		this.ew = false;
 	}
-	
-	public TstNode search(String word){
-		if(word.length()==0){
+
+	public TstNode search(String word) {
+		if (word.length() == 0) {
 			return null;
 		}
 		return search(word, 0);
@@ -120,16 +126,13 @@ public class TstNode extends TreeNode {
 
 	}
 
+	public void travel() {
 
-	
-	public void travel(){
-		
 		StringBuilder sb = new StringBuilder();
 		numberOfWords.value = 0;
 		travel(sb);
 	}
-	
-	
+
 	public void travel(StringBuilder sb) {
 
 		if (rc != null) {
@@ -148,13 +151,19 @@ public class TstNode extends TreeNode {
 
 		if (ew == true) {
 			numberOfWords.value++;
-			ui.textArea.append(sb.toString() + " \n ");
-//			for (int i = 0; i < files.size() - 1; i++) {
-//				MyFile mfile = files.elementAt(i).mfile;
-//				ui.textArea.append(mfile.file.getName() + ", ");
-//
-//			}
-			//ui.textArea.append(files.lastElement().mfile.file.getName() + "\n");
+			ui.textArea.append(sb.toString() + " -> ");
+			for (int i = 0; i < files.size() - 1; i++) {
+				File file = files.elementAt(i).file;
+
+				ui.textArea.append(file.getName() + ", ");
+
+				// TreeFile tf = files.elementAt(i);
+				// ui.textArea.append(".."+tf.mfile.elementAt(tf.i)+"..");
+
+			}
+
+			// System.out.println("."+data+".");
+			ui.textArea.append(files.lastElement().file.getName() + "\n");
 		}
 		if (eq != null) {
 
@@ -183,7 +192,7 @@ public class TstNode extends TreeNode {
 				max = h;
 			}
 		}
-		
+
 		if (eq != null) {
 
 			h = eq.hight() + 1;
@@ -191,36 +200,35 @@ public class TstNode extends TreeNode {
 				max = h;
 			}
 		}
-		
+
 		return max;
 	}
 
 }
 
-class Tst extends Tree{
-	
-	//TstNode root;
+class Tst extends Tree {
+
+	// TstNode root;
 	UI ui;
-	
+
 	public Tst(UI ui) {
 		// TODO Auto-generated constructor stub
 		this.ui = ui;
 	}
-	
+
 	public void add(String word, MyFile file, int plc) {
-//		
-		if(word.length()==0){
+		//
+		if (word.length() == 0) {
 			return;
 		}
-		
-		if(root == null){
+
+		if (root == null) {
 			root = new TstNode(word.charAt(0), ui);
-			root.numberOfNodes = new IntObj(1);
-			//System.out.println(word);
+			TreeNode.numberOfNodes = new IntObj(1);
+			// System.out.println(word);
 		}
-		
+
 		root.add(word, file, plc);
 	}
-	
-	
+
 }

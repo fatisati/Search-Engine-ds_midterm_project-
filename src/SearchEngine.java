@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,12 +16,12 @@ public class SearchEngine {
 	UI ui;
 	String type;
 
-	public SearchEngine(Vector<MyFile> files, UI ui, String type) {
+	public SearchEngine(Vector<MyFile> mfiles, UI ui, String type) {
 		// TODO Auto-generated constructor stub
 		this.type = type;
 		TreeNode.numberOfWords = new IntObj(0);
 		this.ui = ui;
-		indexFiled = files.size();
+		indexFiled = mfiles.size();
 
 		String stpWordsTxt = filetxt("./StopWords.txt");
 		stopwords = stpWords(stpWordsTxt);
@@ -56,7 +57,7 @@ public class SearchEngine {
 			tree = new Trie(ui);
 		}
 		
-		readFiles(files);
+		readFiles(mfiles);
 		
 		//System.out.println(TreeNode.numberOfNodes.value);
 		

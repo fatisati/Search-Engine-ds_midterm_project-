@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.Vector;
 
 public class TrieNode extends TreeNode {
@@ -21,19 +22,22 @@ public class TrieNode extends TreeNode {
 		return i;
 	}
 
-	public void add(String word, MyFile file, int i, int j) {
+	public void add(String word, MyFile mfile, int i, int plc) {
 
 		if (i == word.length()) {
-			data = word;
-
+			
 			if (!ew) {
 				numberOfWords.value++;
+				data = word;
+				ew = true;
 			}
-			ew = true;
-			if (file != null) {
+			
+			if (mfile != null && !files.doesContain(mfile.file)) {
 
-				files.add(new TreeFile(file, j));
-				file.nodes.addElement(this);
+				files.add(new TreeFile(mfile.file, plc));
+				
+				mfile.nodes.addElement(this);
+				//file.nodes.addElement(this);
 			}
 
 		}
@@ -46,7 +50,7 @@ public class TrieNode extends TreeNode {
 				numberOfNodes.value++;
 			}
 
-			nodes[k].add(word, file, i + 1, j);
+			nodes[k].add(word, mfile, i + 1, plc);
 
 		}
 
@@ -73,10 +77,10 @@ public class TrieNode extends TreeNode {
 	}
 
 	@Override
-	public void add(String word, MyFile file, int i) {
+	public void add(String word, MyFile mfile, int i) {
 
 		if (word.length() != 0) {
-			add(word, file, 0, i);
+			add(word, mfile, 0, i);
 
 		}
 
@@ -88,11 +92,11 @@ public class TrieNode extends TreeNode {
 		if (ew) {
 			ui.textArea.append(data + " -> ");
 			for (int i = 0; i < files.size() - 1; i++) {
-				MyFile mfile = files.elementAt(i).mfile;
-				ui.textArea.append(mfile.file.getName() + ", ");
+				File file = files.elementAt(i).file;
+				ui.textArea.append(file.getName() + ", ");
 
 			}
-			ui.textArea.append(files.lastElement().mfile.file.getName() + "\n");
+			ui.textArea.append(files.lastElement().file.getName() + "\n");
 		}
 
 		for (int i = 0; i < 26; i++) {
@@ -149,14 +153,14 @@ class Trie extends Tree{
 	}
 
 	@Override
-	public void add(String word, MyFile file, int plc) {
+	public void add(String word, MyFile mfile, int plc) {
 		// TODO Auto-generated method stub
 		if(root == null){
 			root = new TrieNode(ui);
-			root.numberOfNodes = new IntObj(1);
+			TreeNode.numberOfNodes = new IntObj(1);
 		}
 		
-		root.add(word, file, plc);
+		root.add(word, mfile, plc);
 	}
 	
 }

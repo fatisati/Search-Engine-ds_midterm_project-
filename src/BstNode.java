@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.Vector;
 
 public class BstNode extends TreeNode {
@@ -18,18 +19,18 @@ public class BstNode extends TreeNode {
 	}
 
 	@Override
-	public void add(String word, MyFile file, int i) {
+	public void add(String word, MyFile mfile, int i) {
 		// TODO Auto-generated method stub
 
 		if (word.length() > 0) {
 
 			if (word.compareTo(data) == 0) {
 
-				if (file != null && !files.doesContain(file)) {
+				if (mfile != null && !files.doesContain(mfile.file)) {
 
-					files.add(new TreeFile(file, i));
+					files.add(new TreeFile(mfile.file, i));
+					mfile.nodes.addElement(this);
 
-					file.nodes.addElement(this);
 				}
 
 			}
@@ -40,7 +41,7 @@ public class BstNode extends TreeNode {
 					rc = new BstNode(word, this, false, ui);
 					numberOfWords.value++;
 				}
-				rc.add(word, file, i);
+				rc.add(word, mfile, i);
 			}
 
 			if (word.compareTo(data) < 0) {
@@ -49,7 +50,7 @@ public class BstNode extends TreeNode {
 					lc = new BstNode(word, this, true, ui);
 					numberOfWords.value++;
 				}
-				lc.add(word, file, i);
+				lc.add(word, mfile, i);
 			}
 		}
 	}
@@ -153,17 +154,17 @@ public class BstNode extends TreeNode {
 
 			ui.textArea.append(data + " -> ");
 			for (int i = 0; i < files.size() - 1; i++) {
-				MyFile mfile = files.elementAt(i).mfile;
+				File file = files.elementAt(i).file;
 
-				ui.textArea.append(mfile.file.getName() + ", ");
+				ui.textArea.append(file.getName() + ", ");
 
-				TreeFile tf = files.elementAt(i);
+				// TreeFile tf = files.elementAt(i);
 				// ui.textArea.append(".."+tf.mfile.elementAt(tf.i)+"..");
 
 			}
-			
-			//System.out.println("."+data+".");
-			ui.textArea.append(files.lastElement().mfile.file.getName() + "\n");
+
+			// System.out.println("."+data+".");
+			ui.textArea.append(files.lastElement().file.getName() + "\n");
 
 		}
 
@@ -206,30 +207,28 @@ public class BstNode extends TreeNode {
 }
 
 class Bst extends Tree {
-	
+
 	public Bst(UI ui) {
 		// TODO Auto-generated constructor stub
 		this.ui = ui;
 	}
 
 	@Override
-	public void add(String word, MyFile file, int plc) {
+	public void add(String word, MyFile mfile, int plc) {
 		// TODO Auto-generated method stub
-		
-		if(word.length()==0){
+
+		if (word.length() == 0) {
 			return;
 		}
-		
-		if (root == null) {
-			
-			
-			root = new BstNode(word, null, false, ui);
-			root.numberOfWords = new IntObj(1);
-			((BstNode)root).isRoot = true;
-		}
-		
 
-		root.add(word, file, plc);
+		if (root == null) {
+
+			root = new BstNode(word, null, false, ui);
+			TreeNode.numberOfWords = new IntObj(1);
+			((BstNode) root).isRoot = true;
+		}
+
+		root.add(word, mfile, plc);
 	}
 
 }
