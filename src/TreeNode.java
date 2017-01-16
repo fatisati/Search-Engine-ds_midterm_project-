@@ -1,6 +1,7 @@
 import java.io.File;
 import java.util.Vector;
 
+
 public abstract class TreeNode {
 
 	LinkList files;
@@ -125,12 +126,30 @@ abstract class Tree {
 		if (root == null) {
 			return null;
 		}
+		
 
 		return root.search(word);
 	}
 
 	public void travel() {
-		root.travel();
+		
+		if(this instanceof Bst){
+			
+			if(root == null){
+				
+				//ui.textArea.append("number of words = 0\n");
+			}
+			
+			else{
+				
+				root.travel();
+
+			}
+		}
+		
+		else{
+			root.travel();
+		}
 	}
 
 	public int hight() {

@@ -7,14 +7,18 @@ public class TstNode extends TreeNode {
 	boolean ew;
 
 	TstNode father;
+	boolean isleft;
+	Tst tree;
 
-	public TstNode(char data, UI ui, TstNode father) {
+	public TstNode(char data, UI ui, TstNode father, Tst tree) {
 		this.data = data;
 		ew = false;
 		files = new LinkList();
 		this.ui = ui;
 		isRoot = false;
 		this.father = father;
+		this.tree = tree;
+		isleft = false;
 	}
 
 	@Override
@@ -54,25 +58,42 @@ public class TstNode extends TreeNode {
 		else {
 			if (Character.compare(word.charAt(i), data) == 0) {
 				if (eq == null) {
-					eq = new TstNode(word.charAt(i + 1), ui, this);
+					eq = new TstNode(word.charAt(i + 1), ui, this, tree);
 					numberOfNodes.value++;
+					
+					eq.ew = true;
+					numberOfWords.value++;
+					
+					if (mfile != null && !eq.files.doesContain(mfile.file)) {
+
+						eq.files.add(new TreeFile(mfile.file, plc));
+						mfile.nodes.addElement(eq);
+						return;
+					}
 				}
-				i = i + 1;
-				next = eq;
+				
+				else{
+					i = i + 1;
+					next = eq;
+				}
+				
 			}
 
 			else if (Character.compare(word.charAt(i), data) > 0) {
 				if (rc == null) {
-					rc = new TstNode(word.charAt(i), ui, this);
+					rc = new TstNode(word.charAt(i), ui, this, tree);
 					numberOfNodes.value++;
+					avl();
 				}
 				next = rc;
 			}
 
 			else if (Character.compare(word.charAt(i), data) < 0) {
 				if (lc == null) {
-					lc = new TstNode(word.charAt(i), ui, this);
+					lc = new TstNode(word.charAt(i), ui, this, tree);
+					lc.isleft = true;
 					numberOfNodes.value++;
+					avl();
 				}
 				next = lc;
 			}
@@ -82,12 +103,34 @@ public class TstNode extends TreeNode {
 		}
 
 	}
+	
+	public void setFather(TstNode newFather){
+		
+		if(father.eq == this){
+			father.eq = null;
+		}
+		
+		if(father.lc == this){
+			father.lc = null;
+		}
+		
+		if(father.rc == this){
+			father.rc = null;
+		}
+		
+		father = newFather;
+	}
 
 	public void addLeft(TstNode node) {
 
 		if (lc == null) {
-
+			
+			if(node!=null){
+				
+				node.setFather(this);
+			}
 			lc = node;
+			lc.isleft = true;
 		}
 
 		else {
@@ -99,7 +142,12 @@ public class TstNode extends TreeNode {
 
 		if (rc == null) {
 
+			if(node!=null){
+				
+				node.setFather(this);
+			}
 			rc = node;
+			rc.isleft = false;
 		}
 
 		else {
@@ -288,6 +336,210 @@ public class TstNode extends TreeNode {
 
 		return max;
 	}
+	
+	void setLeftChild(TstNode lc) {
+
+		this.lc = lc;
+		if (lc == null) {
+			return;
+		}
+
+		TstNode papa = lc.father;
+		if (papa != null) {
+
+			if (lc == papa.lc) {
+				papa.lc = null;
+			}
+
+			else if (lc == papa.rc) {
+				papa.rc = null;
+			}
+		}
+
+		lc.father = this;
+		lc.isleft = true;
+	}
+
+	void setRightChild(TstNode rc) {
+
+		this.rc = rc;
+
+		if (rc == null) {
+			return;
+		}
+
+		TstNode papa = rc.father;
+
+		if (papa != null) {
+
+			if (rc == papa.lc) {
+				papa.lc = null;
+			}
+
+			else if (rc == papa.rc) {
+				papa.rc = null;
+			}
+
+		}
+
+		rc.father = this;
+		rc.isleft = false;
+	}
+	
+	public int lrHight(){
+		
+		int max = 1;
+		int h;
+		if (rc != null) {
+
+			h = rc.lrHight() + 1;
+			if (h > max) {
+				max = h;
+			}
+		}
+
+		if (lc != null) {
+
+			h = lc.lrHight() + 1;
+			if (h > max) {
+				max = h;
+			}
+		}
+
+		return max;
+	}
+	
+	public TstNode rotate(String type) {
+
+		TstNode root = null;
+		TstNode toBeAdded = null;
+
+		if (type == "right") {
+			root = lc;
+			toBeAdded = root.rc;
+
+			root.setRightChild(this);
+			setLeftChild(toBeAdded);
+
+		}
+
+		else if (type == "left") {
+
+			root = rc;
+			toBeAdded = root.lc;
+
+			root.setLeftChild(this);
+			setRightChild(toBeAdded);
+		}
+
+		return root;
+	}
+
+	public void avl() {
+
+		int leftHeight = 0;
+		int rightHeight = 0;
+
+		if (lc != null) {
+
+			leftHeight = lc.lrHight();
+		}
+
+		if (rc != null) {
+			rightHeight = rc.lrHight();
+		}
+
+		if (leftHeight > rightHeight + 1) {
+
+			leftHeight = 0;
+			rightHeight = 0;
+
+			if (lc.lc != null) {
+				leftHeight = lc.lc.lrHight();
+			}
+
+			if (lc.rc != null) {
+				rightHeight = lc.rc.lrHight();
+			}
+
+			if (leftHeight < rightHeight) {
+
+				// System.out.println("lr");
+
+				setLeftChild(lc.rotate("left"));
+
+			}
+
+			if (isRoot) {
+
+				isRoot = false;
+				tree.root = rotate("right");
+				tree.root.isRoot = true;
+				((TstNode) tree.root).father = null;
+
+			}
+
+			else if (isleft) {
+
+				father.setLeftChild(rotate("right"));
+			}
+
+			else {
+
+				father.setRightChild(rotate("right"));
+			}
+		}
+
+		else if (rightHeight > leftHeight + 1) {
+
+			leftHeight = 0;
+			rightHeight = 0;
+
+			if (rc.lc != null) {
+				leftHeight = rc.lc.lrHight();
+			}
+
+			if (rc.rc != null) {
+				rightHeight = rc.rc.lrHight();
+			}
+
+			if (rightHeight < leftHeight) {
+
+				setRightChild(rc.rotate("right"));
+
+				// rotate("left");
+				//System.out.println("rl");
+				// System.out.println("left");
+
+			}
+
+			if (isRoot) {
+
+				isRoot = false;
+				tree.root = rotate("left");
+				tree.root.isRoot = true;
+				((TstNode) tree.root).father = null;
+			}
+
+			else if (isleft) {
+
+				father.setLeftChild(rotate("left"));
+			}
+
+			else {
+
+				father.setRightChild(rotate("left"));
+			}
+		}
+
+		// System.out.println(data);
+		if (father != null) {
+
+			father.avl();
+
+		}
+
+	}
 
 }
 
@@ -297,7 +549,7 @@ class Tst extends Tree {
 	UI ui;
 
 	public Tst(UI ui) {
-		// TODO Auto-generated constructor stub
+		
 		this.ui = ui;
 	}
 
@@ -310,7 +562,8 @@ class Tst extends Tree {
 		if (root == null) {
 			//root = new TstNode(word.charAt(0), ui, null);
 			
-			root = new TstNode('-', ui, null);
+			root = new TstNode(word.charAt(0), ui, null, this);
+			root.isRoot = true;
 
 			//root.isRoot = true;
 			TreeNode.numberOfNodes = new IntObj(1);

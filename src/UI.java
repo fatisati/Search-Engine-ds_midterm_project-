@@ -11,14 +11,12 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Vector;
 
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -74,7 +72,7 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 		textf.setFont(font);
 		textf.setLocation(border, 100);
 
-		brows = new JButton("Brows");
+		brows = new JButton("brows");
 		brows.setSize(200, 50);
 		brows.setLocation(600 + 2 * border, 100);
 		brows.setFont(font);
@@ -184,12 +182,12 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 		chooser.setPreferredSize(new Dimension(800, 600));
 		chooser.setDialogTitle("choosertitle");
 		setFileChooserFont(chooser.getComponents());
-		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setAcceptAllFileFilterUsed(false);
 
 		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 
-			textf.setText(chooser.getCurrentDirectory().toString());
+			textf.setText(chooser.getSelectedFile().toString());
 
 		}
 	}
@@ -294,7 +292,7 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 		}
 		if (!flag) {
 
-			fi = chooser.getCurrentDirectory().listFiles();
+			fi = chooser.getSelectedFile().listFiles();
 			for (File file : fi) {
 				if (file.getName().equals(fileName)) {
 					
@@ -393,7 +391,7 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 
 	public void listfCommand() {
 
-		fi = chooser.getCurrentDirectory().listFiles();
+		fi = chooser.getSelectedFile().listFiles();
 
 		for (File file : fi) {
 			if (file.equals(fi[fi.length - 1])) {
