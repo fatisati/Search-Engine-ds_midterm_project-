@@ -30,7 +30,7 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 	JButton brows;
 	JTextArea textArea;
 	JLabel plz;
-	JRadioButton tst, bst, trie;
+	JRadioButton tst, bst, trie, hash;
 	JTextField search;
 	JButton build, reset, help, exit;
 	JScrollPane scroll;
@@ -108,11 +108,17 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 		trie.setLocation(700, 650);
 		trie.setSize(100, 100);
 		trie.setFont(font);
+		
+		hash = new JRadioButton("Hash");
+		hash.setLocation(800, 650);
+		hash.setSize(100, 100);
+		hash.setFont(font);
 
 		ButtonGroup group = new ButtonGroup();
 		group.add(bst);
 		group.add(tst);
 		group.add(trie);
+		group.add(hash);
 
 		search = new JTextField();
 		search.setSize(850, 50);
@@ -153,6 +159,7 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 		add(tst);
 		add(bst);
 		add(trie);
+		add(hash);
 		add(search);
 		add(build);
 		add(reset);
@@ -296,6 +303,7 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 			for (File file : fi) {
 				if (file.getName().equals(fileName)) {
 					
+					System.out.println(fileName);
 					MyFile mfile = new MyFile(file);
 
 					//files.addElement(file);
@@ -477,6 +485,11 @@ public class UI extends JFrame implements ActionListener, KeyListener {
 
 				sr = new SearchEngine(mfiles, this, "trie");
 
+			}
+			
+			if(hash.isSelected()){
+				
+				sr = new SearchEngine(mfiles, this, "hash");
 			}
 
 		}

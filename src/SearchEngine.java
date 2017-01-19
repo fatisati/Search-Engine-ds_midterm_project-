@@ -57,6 +57,11 @@ public class SearchEngine {
 			tree = new Trie(ui);
 		}
 		
+		if(type.equals("hash")){
+			
+			tree = new Hash(1000000, ui);
+		}
+		
 		readFiles(mfiles);
 		
 		//System.out.println(TreeNode.numberOfNodes.value);
@@ -65,11 +70,21 @@ public class SearchEngine {
 		long memoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 		long endTime = System.currentTimeMillis();
 		long totalTime = endTime - startTime;
+		
+		if(type == "hash"){
+			ui.textArea.append("\nhash has been created:)\n");
+			ui.textArea.append("number of indexed files: " + indexFiled + "\n");
+			ui.textArea.append("number of words in tree: " + Hash.numberOfWords.value + "\n");
+		}
+		
+		else{
+			
+			ui.textArea.append("\n" + type + " tree has been created:)\n");
+			ui.textArea.append("number of indexed files: " + indexFiled + "\n");
+			ui.textArea.append("number of words: " + TreeNode.numberOfWords.value + "\n");
+			ui.textArea.append("tree height: " + tree.hight() + "\n");
+		}
 
-		ui.textArea.append("\n" + type + " tree has been created:)\n");
-		ui.textArea.append("number of indexed files: " + indexFiled + "\n");
-		ui.textArea.append("number of words in tree: " + TreeNode.numberOfWords.value + "\n");
-		ui.textArea.append("tree height: " + tree.hight() + "\n");
 		ui.textArea.append("time used: " + totalTime + " millisecond\n");
 		ui.textArea.append(memoryAfter - memoryBefore + " memory usage\n\n");
 	}
@@ -108,13 +123,16 @@ public class SearchEngine {
 			ans = new Bst(ui);
 		}
 
-		else {
+		else if(type.equals("trie")){
 
 			ans = new Trie(ui);
 		}
-
-		// txt = filetxt(mfile.file.getPath());
-		// String[] parts = txt.split("[\\r\\n|\\s]+");
+		
+		else{
+			
+			ans=new Hash(1000, ui);
+		}
+		
 		String parts[] = txt.replaceAll("(^\\s+|\\s+$)", "").split("\\s+");
 
 		for (int j = 0; j < parts.length; j++) {

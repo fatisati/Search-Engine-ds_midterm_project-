@@ -10,7 +10,7 @@ public class TstNode extends TreeNode {
 	boolean isleft;
 	Tst tree;
 
-	public TstNode(char data, UI ui, TstNode father, Tst tree) {
+	public TstNode(char data, UI ui, TstNode father, Tst tree, boolean isLeft) {
 		this.data = data;
 		ew = false;
 		files = new LinkList();
@@ -18,7 +18,7 @@ public class TstNode extends TreeNode {
 		isRoot = false;
 		this.father = father;
 		this.tree = tree;
-		isleft = false;
+		this.isleft = isLeft;
 	}
 
 	@Override
@@ -50,6 +50,7 @@ public class TstNode extends TreeNode {
 
 				files.add(new TreeFile(mfile.file, plc));
 				mfile.nodes.addElement(this);
+				//avl();
 				return;
 			}
 
@@ -58,48 +59,39 @@ public class TstNode extends TreeNode {
 		else {
 			if (Character.compare(word.charAt(i), data) == 0) {
 				if (eq == null) {
-					eq = new TstNode(word.charAt(i + 1), ui, this, tree);
+					eq = new TstNode(word.charAt(i + 1), ui, this, tree, false);
 					numberOfNodes.value++;
 					
-					eq.ew = true;
-					numberOfWords.value++;
-					
-					if (mfile != null && !eq.files.doesContain(mfile.file)) {
-
-						eq.files.add(new TreeFile(mfile.file, plc));
-						mfile.nodes.addElement(eq);
-						return;
-					}
 				}
-				
-				else{
-					i = i + 1;
-					next = eq;
-				}
+				i = i + 1;
+				next = eq;
 				
 			}
 
 			else if (Character.compare(word.charAt(i), data) > 0) {
 				if (rc == null) {
-					rc = new TstNode(word.charAt(i), ui, this, tree);
+					rc = new TstNode(word.charAt(i), ui, this, tree, false);
 					numberOfNodes.value++;
-					avl();
+					
 				}
+				
 				next = rc;
 			}
 
 			else if (Character.compare(word.charAt(i), data) < 0) {
 				if (lc == null) {
-					lc = new TstNode(word.charAt(i), ui, this, tree);
+					lc = new TstNode(word.charAt(i), ui, this, tree, true);
 					lc.isleft = true;
 					numberOfNodes.value++;
-					avl();
+				
 				}
+				
 				next = lc;
+
 			}
 
 			next.add(word, i, mfile, plc);
-
+			avl();
 		}
 
 	}
@@ -354,6 +346,11 @@ public class TstNode extends TreeNode {
 			else if (lc == papa.rc) {
 				papa.rc = null;
 			}
+			
+			else if(lc == papa.eq){
+				
+				papa.eq = null;
+			}
 		}
 
 		lc.father = this;
@@ -379,11 +376,44 @@ public class TstNode extends TreeNode {
 			else if (rc == papa.rc) {
 				papa.rc = null;
 			}
+			
+			else if (rc == papa.eq){
+				papa.eq = null;
+			}
 
 		}
 
 		rc.father = this;
 		rc.isleft = false;
+	}
+	
+	public void setMiddleChild(TstNode node) {
+		// TODO Auto-generated method stub
+		
+		this.eq = node;
+
+		if (eq == null) {
+			return;
+		}
+
+		TstNode papa = eq.father;
+
+		if (papa != null) {
+
+			if (eq == papa.lc) {
+				papa.lc = null;
+			}
+
+			else if (eq == papa.rc) {
+				papa.rc = null;
+			}
+			
+			else if (eq == papa.eq){
+				papa.eq = null;
+			}
+		}
+		eq.father = this;
+		eq.isleft = false;
 	}
 	
 	public int lrHight(){
@@ -464,8 +494,6 @@ public class TstNode extends TreeNode {
 
 			if (leftHeight < rightHeight) {
 
-				// System.out.println("lr");
-
 				setLeftChild(lc.rotate("left"));
 
 			}
@@ -484,8 +512,12 @@ public class TstNode extends TreeNode {
 				father.setLeftChild(rotate("right"));
 			}
 
-			else {
+			else if(father.eq == this){
 
+				father.setMiddleChild(rotate("right"));
+			}
+			
+			else{
 				father.setRightChild(rotate("right"));
 			}
 		}
@@ -507,10 +539,6 @@ public class TstNode extends TreeNode {
 
 				setRightChild(rc.rotate("right"));
 
-				// rotate("left");
-				//System.out.println("rl");
-				// System.out.println("left");
-
 			}
 
 			if (isRoot) {
@@ -526,13 +554,16 @@ public class TstNode extends TreeNode {
 				father.setLeftChild(rotate("left"));
 			}
 
-			else {
+			else if(father.eq == this){
 
+				father.setMiddleChild(rotate("left"));
+			}
+			
+			else{
 				father.setRightChild(rotate("left"));
 			}
 		}
 
-		// System.out.println(data);
 		if (father != null) {
 
 			father.avl();
@@ -562,7 +593,7 @@ class Tst extends Tree {
 		if (root == null) {
 			//root = new TstNode(word.charAt(0), ui, null);
 			
-			root = new TstNode(word.charAt(0), ui, null, this);
+			root = new TstNode(word.charAt(0), ui, null, this, false);
 			root.isRoot = true;
 
 			//root.isRoot = true;

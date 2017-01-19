@@ -3,7 +3,7 @@ import java.util.Vector;
 
 public class BstNode extends TreeNode {
 
-	String data;
+	public String data;
 	BstNode lc, rc, father;
 	boolean isleft;
 
@@ -19,6 +19,7 @@ public class BstNode extends TreeNode {
 		isRoot = false;
 		this.tree = tree;
 	}
+	
 
 	@Override
 	public void add(String word, MyFile mfile, int i) {
@@ -477,6 +478,15 @@ class Bst extends Tree {
 
 		root.add(word, mfile, plc);
 
+	}
+	
+	public BstNode getRoot(){
+		
+		if(root == null){
+			return null;
+		}
+		
+		return (BstNode)root;
 	}
 
 }

@@ -153,6 +153,10 @@ abstract class Tree {
 	}
 
 	public int hight() {
+		
+		if(root == null){
+			return 0;
+		}
 		return root.hight();
 	}
 
@@ -167,7 +171,7 @@ abstract class Tree {
 			tn.files.del(mfile.file);
 
 			if (tn.files.first == null) {
-
+				
 				tn.deleteNode();
 			}
 		}
@@ -220,12 +224,7 @@ abstract class Tree {
 							else {
 
 								LinkListNode node = ans.nodeWithFile(file);
-//								if (ln != null) {
-//
-//									// System.out.println("hey");
-//									ln.tfile.plcs.addElement(new IntObj(tf.i));
-//
-//								}
+
 								
 								node.tfile.plcs.addElement(new IntObj(tf.i));
 
